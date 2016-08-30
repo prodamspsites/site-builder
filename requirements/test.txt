@@ -1,0 +1,6 @@
+-r ../requirements.txt
+pytest==2.9.2
+mock==2.0.0
+pytest_cov==2.2.1
+mixer==5.5.7
+blinker==1.4
