@@ -21,13 +21,13 @@ def create_app():
     lm = LoginManager()
     lm.init_app(app)
 
-    # def load_user(user_id):
-    #     try:
-    #         from auth.models import User
-    #         return User.query.get(user_id)
-    #     except ValueError:
-    #         pass
+    def load_user(user_id):
+        try:
+            from builder.models import User
+            return User.query.get(user_id)
+        except ValueError:
+            pass
 
-    # lm.user_loader(load_user)
+    lm.user_loader(load_user)
     # register_blueprints(app)
     return app
