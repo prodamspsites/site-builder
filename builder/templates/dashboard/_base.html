@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>PRODAM Builder :: {% block title %}{% endblock %}</title>
+    <link href="{{ url_for('static', filename='dashboard/style.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css", rel="stylesheet">
+</head>
+<div>
+{% include "dashboard/_menu.html" %}
+
+<div class="row">
+    <div id="menu" class="col-xs-12 col-md-2 col-md-offset-2">
+        <div class="well">
+            {% block lateral_menu %}{% endblock %}
+        </div>
+    </div>
+    <div id="content" class="col-xs-12 col-md-6">{% block content %}{% endblock %}</div>
+</div>
+
+</body>
+</html>

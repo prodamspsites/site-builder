@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{{ url_for('static', filename='security/style.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css", rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+      <div class="row">
+        <div class="Absolute-Center is-Responsive">
+            {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+</body>
+</html>

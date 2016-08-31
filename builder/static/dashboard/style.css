@@ -1,0 +1,19 @@
+/**********************************
+Responsive navbar-brand image CSS
+- Remove navbar-brand padding for firefox bug workaround
+- add 100% height and width auto ... similar to how bootstrap img-responsive class works
+***********************************/
+
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand>img {
+  height: 100%;
+  padding: 15px;
+  width: auto;
+}
+
+.navbar-brand{
+  background: url(http://saopauloaberta.prefeitura.sp.gov.br/wp-content/uploads/2014/06/logoProdam-incompleto-horizon.png) center / contain no-repeat;
+  width: 200px;
+}
