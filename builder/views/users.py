@@ -12,17 +12,17 @@ def list_users():
     return render_template('users/list-users.html')
 
 
-@blueprint.route('/add_user', methods=['GET'])
+@blueprint.route('/add', methods=['GET'])
 def add_user():
     return render_template('users/add-user.html')
 
 
-@blueprint.route('/user/<user_id>', methods=['GET'])
+@blueprint.route('/<user_id>', methods=['GET'])
 def user_details(user_id):
     return render_template('users/user-details.html')
 
 
-@blueprint.route('/user/<user_id>/delete', methods=['GET'])
+@blueprint.route('/<user_id>/delete', methods=['GET'])
 def user_delete(user_id):
     return render_template('users/user-details.html')
 
@@ -47,7 +47,7 @@ def role_delete(role_id):
     return #redirect
 
 
-@blueprint.route('/user/<user_id>/role/<role_id>', methods=['GET'])
+@blueprint.route('/<user_id>/role/<role_id>', methods=['GET'])
 def set_role(user_id, role_id):
     return #redirect
 

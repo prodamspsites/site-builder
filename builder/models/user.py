@@ -17,9 +17,9 @@ class User(Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     __tablename__ = 'user'
 
-    username = db.Column(db.String(30), unique=True)
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
+    username = db.Column(db.String(30), unique=True, nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean(), default=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
     last_login_at = db.Column(db.DateTime())

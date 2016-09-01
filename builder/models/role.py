@@ -10,7 +10,7 @@ class Role(Model):
     id = db.Column(db.Integer, primary_key=True)
     __tablename__ = 'role'
 
-    name = db.Column(db.String(80), unique=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
     description = db.Column(db.String(255))
     active = db.Column(db.Boolean(), default=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())

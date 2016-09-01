@@ -12,7 +12,7 @@ def register_blueprints(app):
     from builder.views.security import blueprint as security_blueprint
     from builder.views.users import blueprint as users_blueprint
     app.register_blueprint(security_blueprint)
-    app.register_blueprint(users_blueprint, url_prefix='users')
+    app.register_blueprint(users_blueprint, url_prefix='/users')
     return app
 
 
