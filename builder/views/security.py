@@ -24,11 +24,7 @@ def login():
             else:
                 raise PasswordMismatch
 
-        except UserNotFound:
-            flash('Usuário não encontrado', category='danger')
-            return redirect(url_for('security.login'))
-
-        except PasswordMismatch:
+        except (UserNotFound, PasswordMismatch):
             flash('Usuário ou senha inválido', category='danger')
             return redirect(url_for('security.login'))
 
@@ -46,7 +42,7 @@ def suppport():
 
 @blueprint.route('/not_authorized', methods=['GET'])
 def not_authorized():
-    return render_template('security/not-authorized.html')
+    return render_template('dashboard/not-authorized.html')
 
 
 @blueprint.route('/dashboard', methods=['GET'])

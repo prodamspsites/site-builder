@@ -1,0 +1,11 @@
+{% extends "dashboard/layout/_base.html" %}
+{% block layout %}
+    <div class="row">
+        <div id="menu" class="col-md-2 col-md-offset-1">
+            <div class="well">
+                {% block lateral_menu %}{% endblock %}
+            </div>
+        </div>
+        <div id="content" class="col-md-8">{% block content %}{% endblock %}</div>
+    </div>
+{% endblock %}

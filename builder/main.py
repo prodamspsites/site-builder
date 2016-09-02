@@ -35,6 +35,13 @@ def create_app():
         except ValueError:
             pass
 
+    # Flask login settings
     lm.user_loader(load_user)
+    lm.login_view = "security.login"
+    lm.needs_refresh_message = "Sessão expirada"
+    lm.needs_refresh_message_category = "info"
+    lm.login_message = "Faça o login antes de continuar"
+    lm.login_message_category = "info"
+
     register_blueprints(app)
     return app
