@@ -1,0 +1,36 @@
+{% extends "common/_one_column.html" %}
+
+{% block title %}Lista de usuários{% endblock %}
+
+{% block content %}
+    <div class="row text-right">
+        <a class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Adicionar Usuário</a>
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Usuário</th>
+                    <th>Email</th>
+                    <th>Criado em</th>
+                    <th>Ultima vez logado</th>
+                    <th>Ativo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user.id }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.created_at }}</td>
+                    <td>{{ user.current_login_at }}</td>
+                    <td>{{ user.active }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

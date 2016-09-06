@@ -8,7 +8,7 @@
         <form action="{{ form_action }}" id="loginForm" method="POST">
           {{ login_form.hidden_tag() }}
 
-          {% include "security/_messages.html" %}
+          {% include "common/_messages.html" %}
           <div class="form-group input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
             {{ login_form.username(placeholder='Usuário', class='form-control', type='text') }}

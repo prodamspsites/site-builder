@@ -24,7 +24,7 @@ class User(Model, UserMixin):
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
     last_login_at = db.Column(db.DateTime())
     current_login_at = db.Column(db.DateTime())
-    login_count = db.Column(db.Integer())
+    login_count = db.Column(db.Integer(), default=0)
 
     @classmethod
     def by_login(cls, login):
@@ -62,6 +62,12 @@ class User(Model, UserMixin):
             return user
         except IntegrityError:
             raise UserAlreadyExist
+
+    def reload_stats(self):
+        self.last_login_at = self.current_login_at
+        self.current_login_at = datetime.now()
+        self.login_count += self.login_count
+        self.save(commit=True)
 
     def change_password(self, old_password, password, confirm_password):
         """Change password of user"""

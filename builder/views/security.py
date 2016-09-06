@@ -1,4 +1,5 @@
 # coding: utf-8
+from datetime import datetime
 from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_required, login_user, logout_user
 
@@ -20,7 +21,8 @@ def login():
             user = User.by_login(username)
             if user.validate_password(password):
                 login_user(user)
-                return redirect(url_for('security.home'))
+                user.reload_stats()
+                return redirect(url_for('dashboard.home'))
             else:
                 raise PasswordMismatch
 
@@ -40,28 +42,12 @@ def suppport():
     return render_template('security/support.html')
 
 
-@blueprint.route('/not_authorized', methods=['GET'])
-def not_authorized():
-    return render_template('dashboard/not-authorized.html')
-
-
-@blueprint.route('/dashboard', methods=['GET'])
-@login_required
-def home():
-    return render_template('dashboard/index.html')
-
-
 @blueprint.route('/logout', methods=['GET'])
 def logout():
     logout_user()
     return redirect(url_for('security.login'))
 
 
-@blueprint.route('/config', methods=['GET'])
-def config():
-    return render_template('dashboard/config.html')
-
-
-@blueprint.route('/change-password', methods=['GET'])
-def change_password():
-    return render_template('dashboard/change-password.html')
+@blueprint.route('/not_authorized', methods=['GET'])
+def not_authorized():
+    return render_template('security/not-authorized.html')
