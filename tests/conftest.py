@@ -1,8 +1,7 @@
 # coding: utf-8
 import os
 
-os.environ['AUTH_ENV'] = 'test'
-os.environ['SECRET_KEY'] = 'test'
+os.environ['BUILDER_ENV'] = 'test'
 
 import pytest
 from flask.testing import FlaskClient
@@ -95,3 +94,26 @@ def all(request, app, db_session):
         request.cls.app = app
     # This fix is to use the `all()` built-in function normally
     return __builtins__['all']
+
+
+@pytest.fixture()
+def superuser():
+    from builder.models import User
+    user = User()
+    user.username = 'Darth_Vader'
+    user.email = 'mayforce@bewith.you'
+    user.password = user.generate_password(password='12345678')
+    user.superuser = True
+    user.save(commit=True)
+    return user
+
+
+@pytest.fixture()
+def user():
+    from builder.models import User
+    user = User()
+    user.username = 'Chewbaca'
+    user.email = 'chewe@solo.com'
+    user.password = user.generate_password(password='12345678')
+    user.save(commit=True)
+    return user
