@@ -3,6 +3,8 @@
 {% block title %}Lista de usuários{% endblock %}
 
 {% block content %}
+    {% include "common/_messages.html" %}
+
     <div class="row text-right">
         <a class="btn btn-success" href="{{ url_for('users.add_user') }}"><span class="glyphicon glyphicon-plus"></span> Adicionar Usuário</a>
     </div>
@@ -16,7 +18,7 @@
                     <th>Email</th>
                     <th>Criado em</th>
                     <th>Ultima vez logado</th>
-                    <th>Ativo</th>
+                    <th class="text-center">Ativo</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,9 +27,15 @@
                     <th scope="row">{{ user.id }}</th>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.created_at }}</td>
-                    <td>{{ user.current_login_at }}</td>
-                    <td>{{ user.active }}</td>
+                    <td>{{ user.created_at | strftime }}</td>
+                    <td>{{ user.current_login_at | strftime }}</td>
+                    <td class="text-center">
+                        {% if user.active %}
+                            <span class="glyphicon glyphicon-ok-sign success"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove-sign"></span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

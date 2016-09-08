@@ -3,19 +3,10 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from builder.utils import register_blueprints, register_template_filters
 
 
 db = SQLAlchemy()
-
-
-def register_blueprints(app):
-    from builder.views.security import blueprint as security_blueprint
-    from builder.views.dashboard import blueprint as dashboard_blueprint
-    from builder.views.users import blueprint as users_blueprint
-    app.register_blueprint(security_blueprint)
-    app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
-    app.register_blueprint(users_blueprint, url_prefix='/users')
-    return app
 
 
 def create_app():
@@ -46,4 +37,6 @@ def create_app():
     lm.login_message_category = "info"
 
     register_blueprints(app)
+    register_template_filters(app)
+
     return app

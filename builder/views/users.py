@@ -1,9 +1,10 @@
 #coding: utf-8
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from builder.models import User, UserRole, Role
 from builder.forms.user import UserForm
+from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist)
 
 
 blueprint = Blueprint('users', __name__, template_folder='templates', static_folder='static')
@@ -18,7 +19,7 @@ def list_users():
 
 
 @login_required
-@blueprint.route('/add', methods=['GET'])
+@blueprint.route('/add', methods=['GET', 'POST'])
 def add_user():
     form = UserForm()
     if form.validate_on_submit():
@@ -29,8 +30,23 @@ def add_user():
                                password=form.password.data,
                                confirm_password=form.password.data)
             flash('Usuário {} criado com sucesso!'.format(user.username), category='success')
-        except:
-            flash('Erro ao adicionar usuário')
+            return redirect(url_for('users.list_users'))
+
+        except InvalidUsername:
+            flash('Nome de usuário inválido', category='danger')
+
+        except InvalidEmail:
+            flash('Email inválido', category='danger')
+
+        except InvalidPassword:
+            flash('Password inválido', category='danger')
+
+        except PasswordMismatch:
+            flash('Password e confirmação de password não estão iguais', category='danger')
+
+        except UserAlreadyExist:
+            flash('Usuário ou email já existem', category='danger')
+
     return render_template('users/add-user.html', form=form)
 
 

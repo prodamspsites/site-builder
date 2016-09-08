@@ -5,7 +5,7 @@ import string
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from builder.exceptions import (InvalidPassword, InvalidUsername, InvalidEmail, PasswordMismatch, UserAlreadyExist,
@@ -54,16 +54,24 @@ class User(Model, UserMixin):
         if password != confirm_password:
             raise PasswordMismatch
 
-        try:
-            user = User()
-            user.username = username
-            user.email = email
-            user.password = cls.generate_password(password)
-            user.save()
-            db.session.commit()
-            return user
-        except IntegrityError:
+        if not cls.valid_username_and_email(username, email):
             raise UserAlreadyExist
+
+        user = User()
+        user.username = username
+        user.email = email
+        user.password = cls.generate_password(password)
+        user.save()
+        db.session.commit()
+        return user
+
+    @classmethod
+    def valid_username_and_email(cls, username, email):
+        email_user = cls.query.filter(User.username == username).first()
+        name_user = cls.query.filter(User.email == email).first()
+        if name_user or email_user:
+            return False
+        return True
 
     def reload_stats(self):
         self.last_login_at = self.current_login_at
