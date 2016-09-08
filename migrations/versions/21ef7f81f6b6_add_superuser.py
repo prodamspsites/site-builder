@@ -1,4 +1,4 @@
-"""Add superuser for User models
+"""Add superuser and temporary for User models
 
 Revision ID: 21ef7f81f6b6
 Revises: 913e2a08a191
@@ -15,8 +15,10 @@ import sqlalchemy as sa
 
 
 def upgrade():
+    op.add_column('user', sa.Column('temporary', sa.Boolean(), nullable=True))
     op.add_column('user', sa.Column('superuser', sa.Boolean(), nullable=True))
 
 
 def downgrade():
     op.drop_column('user', 'superuser')
+    op.drop_column('user', 'temporary')

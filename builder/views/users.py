@@ -1,8 +1,9 @@
 #coding: utf-8
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash
 from flask_login import login_required
 
 from builder.models import User, UserRole, Role
+from builder.forms.user import UserForm
 
 
 blueprint = Blueprint('users', __name__, template_folder='templates', static_folder='static')
@@ -19,7 +20,18 @@ def list_users():
 @login_required
 @blueprint.route('/add', methods=['GET'])
 def add_user():
-    return render_template('users/add-user.html')
+    form = UserForm()
+    if form.validate_on_submit():
+        try:
+            user = User()
+            user = user.create(username=form.username.data,
+                               email=form.email.data,
+                               password=form.password.data,
+                               confirm_password=form.password.data)
+            flash('Usuário {} criado com sucesso!'.format(user.username), category='success')
+        except:
+            flash('Erro ao adicionar usuário')
+    return render_template('users/add-user.html', form=form)
 
 
 @login_required

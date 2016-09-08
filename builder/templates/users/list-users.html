@@ -1,10 +1,10 @@
-{% extends "common/_one_column.html" %}
+{% extends "common/_layout-full.html" %}
 
 {% block title %}Lista de usuários{% endblock %}
 
 {% block content %}
     <div class="row text-right">
-        <a class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Adicionar Usuário</a>
+        <a class="btn btn-success" href="{{ url_for('users.add_user') }}"><span class="glyphicon glyphicon-plus"></span> Adicionar Usuário</a>
     </div>
 
     <div class="row">
