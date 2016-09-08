@@ -13,8 +13,10 @@ def login_permission(permission):
         @wraps(function)
         def wrapper(*args, **kwargs):
             user = User.query.get(current_user.get_id())
+            if user.is_superuser:
+                return function(*args, **kwargs)
             try:
-                role = Role.search_role(permission, True)
+                role = Role.search_role(name=permission, exactly=True)
                 if user.has_role(role):
                     return function(*args, **kwargs)
             except RoleNotFound:

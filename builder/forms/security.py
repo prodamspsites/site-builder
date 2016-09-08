@@ -1,6 +1,6 @@
 # coding: utf-8
 from flask_wtf import Form
-from wtforms.fields import StringField, PasswordField, SubmitField
+from wtforms.fields import StringField, PasswordField
 
 
 class LoginForm(Form):

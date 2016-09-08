@@ -21,6 +21,7 @@ class User(Model, UserMixin):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean(), default=True)
+    superuser = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
     last_login_at = db.Column(db.DateTime())
     current_login_at = db.Column(db.DateTime())
@@ -134,3 +135,16 @@ class User(Model, UserMixin):
         for user_role in self.user_roles:
             user_role.delete(commit=True)
         db.session.commit()
+
+    @property
+    def is_superuser(self):
+        return self.superuser
+
+    def roles_available(self):
+        from builder.models import Role
+        roles = Role.query.filter_by(Role.active is True).all()
+        available_roles = []
+        for role in roles:
+            if not self.has_role(role):
+                available_roles.append(role)
+        return available_roles
