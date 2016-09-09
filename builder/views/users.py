@@ -120,5 +120,28 @@ def toggle_role(role_id):
 @login_required
 @blueprint.route('/<user_id>/role/<role_id>', methods=['GET'])
 def set_role(user_id, role_id):
-    return #redirect
+    user = User.query.get(user_id)
+    role = Role.query.get(role_id)
+    try:
+        UserRole.set_role(user, role)
+        flash('Permissão {} atrelada ao usuário {} com sucesso'.format(role.name, user.username), category='success')
 
+    except:
+        flash('Erro ao adicionar permissão!')
+
+    return redirect(request.referrer)
+
+
+@login_required
+@blueprint.route('/<user_id>/role/<role_id>/remove', methods=['GET'])
+def unset_role(user_id, role_id):
+    user = User.query.get(user_id)
+    role = Role.query.get(role_id)
+    try:
+        UserRole.delete_role(user, role)
+        flash('Permissão {} removida do usuário {} com sucesso'.format(role.name, user.username), category='success')
+
+    except:
+        flash('Erro ao remover permissão!')
+
+    return redirect(request.referrer)

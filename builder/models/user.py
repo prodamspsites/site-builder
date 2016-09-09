@@ -149,9 +149,10 @@ class User(Model, UserMixin):
     def is_superuser(self):
         return self.superuser
 
+    @property
     def roles_available(self):
         from builder.models import Role
-        roles = Role.query.filter_by(Role.active is True).all()
+        roles = Role.query.filter(Role.active == True).all()
         available_roles = []
         for role in roles:
             if not self.has_role(role):

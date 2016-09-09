@@ -3,6 +3,7 @@
 {% block title %}Detalhes do usuário{% endblock %}
 
 {% block content %}
+{% include "common/_messages.html" %}
 
 <h2 class="text-center">Detalhes do usuário</h2>
 
@@ -75,17 +76,69 @@
         </div>
 </div>
 
-<div class="col-md-5">
+<div class="col-md-5 well">
 
     <h4 class="text-center">Grupos do Usuário</h4>
-        {% for role in user.roles %}
-            {{ role.name }}
-        {% endfor %}
+        {% if user.roles %}
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th class="col-md-1">#</th>
+                    <th class="col-md-3">Nome</th>
+                    <th class="col-md-6">Descrição</th>
+                    <th class="col-md-2 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in user.roles %}
+                <tr>
+                    <th scope="row">{{ role.id }}</th>
+                    <td>{{ role.name }} </td>
+                    <td>{{ role.description }}</td>
+                    <td class="text-center">
+                        <a class="btn btn-xs btn-danger" href="{{ url_for('users.unset_role', user_id=user.id, role_id=role.id) }}">
+                            <span class="glyphicon glyphicon-ok-sign"></span> Remover
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="text-center">Não há nenhum grupo atrelado a esse usuário.</p>
+        {% endif %}
     <hr>
     <h4 class="text-center">Grupos Disponíveis</h4>
-        {% for role in user.roles %}
-            {{ role.name }}
-        {% endfor %}
+        {% if user.roles_available %}
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th class="col-md-1">#</th>
+                    <th class="col-md-3">Nome</th>
+                    <th class="col-md-6">Descrição</th>
+                    <th class="col-md-2 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in user.roles_available %}
+                <tr>
+                    <th scope="row">{{ role.id }}</th>
+                    <td>{{ role.name }} </td>
+                    <td>{{ role.description }}</td>
+                    <td class="text-center">
+                        <a class="btn btn-xs btn-success" href="{{ url_for('users.set_role', user_id=user.id, role_id=role.id) }}">
+                            <span class="glyphicon glyphicon-ok-sign"></span> Adicionar
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="text-center">Não há nenhum grupo disponível para esse usuário.</p>
+        {% endif %}
 </div>
 
 {% endblock %}
