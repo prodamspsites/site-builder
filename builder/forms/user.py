@@ -10,3 +10,9 @@ class UserForm(Form):
     confirm_password = PasswordField('Confirmação de senha', description='Confirmação de senha')
     active = BooleanField('Ativo')
     superuser = BooleanField('Super Usuário')
+
+
+class RoleForm(Form):
+    name = StringField('Nome', description='Nome da permissão')
+    description = StringField('Descrição', description='Descrição da permissão')
+    active = BooleanField('Ativo')

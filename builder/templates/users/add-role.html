@@ -1,0 +1,46 @@
+{% extends "common/_layout-info.html" %}
+
+{% block title %}Lista de usuários{% endblock %}
+
+{% block info %}
+    <h3 class="text-center">Informações</h3>
+    <hr>
+    <ul>
+        <li>Todos os campos são obrigatórios</li>
+        <li>A permissão já é cadastrado ativada</li>
+    </ul>
+{% endblock %}
+
+
+{% block content %}
+
+<h2 class="text-center">Adicionar uma nova permissão</h2>
+
+<hr>
+
+<form action="" id="roleForm" method="POST">
+  {{ form.hidden_tag() }}
+
+  {% include "common/_messages.html" %}
+  <div class="form-group col-md-12">
+    {{ form.name(placeholder=form.name.description, class='form-control', type='text', size='20') }}
+  </div>
+
+  <div class="form-group col-md-12">
+    {{ form.description(placeholder=form.description.description, class='form-control', type='text-area') }}
+  </div>
+
+  <hr>
+
+  <div class="col-md-12 text-center">
+      <a href="{{ url_for('users.list_roles') }}" class="btn btn-default">
+        <i class="glyphicon glyphicon-floppy-disk"></i> Voltar
+      </a>
+
+      <button type="submit" class="btn btn-success">
+        <i class="glyphicon glyphicon-floppy-disk"></i> Salvar
+      </button>
+  </div>
+</form>
+
+{% endblock %}

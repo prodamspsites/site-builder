@@ -1,0 +1,50 @@
+{% extends "common/_layout-full.html" %}
+
+{% block title %}Lista de usuários{% endblock %}
+
+{% block content %}
+    {% include "common/_messages.html" %}
+
+    <div class="row text-right">
+        <a class="btn btn-success" href="{{ url_for('users.add_role') }}">
+            <span class="glyphicon glyphicon-plus"></span> Adicionar Permissão
+        </a>
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Criado em</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in roles %}
+                <tr>
+                    <th scope="row">{{ role.id }}</th>
+                    <td>{{ role.name }} </td>
+                    <td>{{ role.description }}</td>
+                    <td>{{ role.created_at | strftime }}</td>
+                    <td class="text-center">
+                        {% if role.active %}
+                            <a class="btn btn-xs btn-danger" href="{{ url_for('users.toggle_role', role_id=role.id) }}">
+                                <span class="glyphicon glyphicon-ok-sign"></span> Desativar
+                            </a>
+                        {% else %}
+                            <a class="btn btn-xs btn-success" href="{{ url_for('users.toggle_role', role_id=role.id) }}">
+                                <span class="glyphicon glyphicon-ok-sign"></span> Ativar
+                            </a>
+                        {% endif %}
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
