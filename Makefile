@@ -10,3 +10,15 @@ coverage:
 
 unit:
 	PYTHONPATH=. py.test tests $(ARGS)
+
+local_config:
+    cp builder/config/local.py.example builder/config/local.py
+
+upgrade_db:
+    python manage.py db upgrade
+
+migrate_db:
+    python manage.py db migrate
+
+runserver:
+    python manage.py runserver

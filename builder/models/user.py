@@ -5,7 +5,6 @@ import string
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from builder.exceptions import (InvalidPassword, InvalidUsername, InvalidEmail, PasswordMismatch, UserAlreadyExist,
@@ -76,7 +75,7 @@ class User(Model, UserMixin):
     def reload_stats(self):
         self.last_login_at = self.current_login_at
         self.current_login_at = datetime.now()
-        self.login_count += self.login_count
+        self.login_count = self.login_count + 1
         self.save(commit=True)
 
     def change_password(self, old_password, password, confirm_password):
