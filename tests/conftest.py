@@ -133,6 +133,7 @@ def admin_role():
     from builder.models import Role
     role = Role()
     role.name = 'admin'
+    role.description = 'Administrador'
     role.save(commit=True)
     return role
 
@@ -142,14 +143,5 @@ def client_role():
     from builder.models import Role
     role = Role()
     role.name = 'client'
-    role.save(commit=True)
-    return role
-
-
-@pytest.fixture()
-def reviewer_role():
-    from builder.models import Role
-    role = Role()
-    role.name = 'reviewer'
     role.save(commit=True)
     return role

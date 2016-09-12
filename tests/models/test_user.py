@@ -3,7 +3,7 @@ import pytest
 import mock
 
 from builder.exceptions import (UserAlreadyExist, InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch,
-                             UserNotFound, InvalidCredentials)
+                                UserNotFound, InvalidCredentials, UserAlreadyInRole, UserNotHasRole)
 from builder.models import User
 
 
@@ -76,3 +76,26 @@ def test_if_is_a_superuser(superuser, user):
     assert superuser.superuser is True
     assert user.superuser is False
 
+
+def test_set_role_to_user(user, admin_role):
+    user.set_role(admin_role)
+    assert user.has_role(admin_role) is True
+
+
+def test_should_raise_error_in_duplicate_user_role(superuser, superuser_role):
+    with pytest.raises(UserAlreadyInRole):
+        superuser.set_role(superuser_role)
+
+
+def test_should_raise_error_in_remove_wrong_role(superuser, admin_role):
+    with pytest.raises(UserNotHasRole):
+        superuser.remove_role(admin_role)
+
+
+def test_remove_all_roles_for_a_user(user, admin_role, client_role):
+    user.set_role(admin_role)
+    user.set_role(client_role)
+    assert len(user.roles) == 2
+    user.delete_all_roles()
+    user.refresh()
+    assert len(user.roles) == 0
