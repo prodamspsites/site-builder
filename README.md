@@ -16,6 +16,7 @@ Para instalar, sugiro antes que avalie o uso da ferramenta [Pyenv][0] e
 o plugin [Virtualenv][1]. 
 
 - Crie um ambiente com Python 3.5.2
+- Instale as depêndencias: `pip install -r requirements/dev.txt`
 - Copie o arquivo de configuração: 
 `cp builder/config/local.py.example builder/config/local.py`
 - Se for usar o Docker, ative com `docker-compose up -d`
@@ -70,6 +71,7 @@ Adicionalmente há um Makefile com alguns atalhos:
 - `upgrade_db`: Roda as migrações no banco
 - `migrate_db`: Cria uma nova migração
 - `runserver`: Inicializa o servidor local
+- `deps`: Instala as dependências do projeto
 
 [0]:https://github.com/yyuu/pyenv
 [1]:https://github.com/yyuu/pyenv-virtualenv

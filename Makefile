@@ -22,3 +22,6 @@ migrate_db:
 
 runserver:
     python manage.py runserver
+
+deps:
+    pip install -r requirements/dev.txt
