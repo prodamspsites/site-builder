@@ -73,5 +73,6 @@ def test_invalidate_and_validate_user(user):
 
 
 def test_if_is_a_superuser(superuser, user):
-    assert superuser.is_superuser is True
-    assert user.is_superuser is False
+    assert superuser.superuser is True
+    assert user.superuser is False
+

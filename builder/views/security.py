@@ -1,7 +1,6 @@
 # coding: utf-8
-from datetime import datetime
 from flask import Blueprint, render_template, url_for, flash, redirect
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 
 from builder.forms import security
 from builder.models import User
@@ -33,6 +32,9 @@ def login():
         except:
             flash('Ocorreu um erro inesperado, tente mais tarde', category='info')
             return redirect(url_for('security.login'))
+
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard.home'))
 
     return render_template('security/login.html', login_form=login_form, form_action=url_for('security.login'))
 

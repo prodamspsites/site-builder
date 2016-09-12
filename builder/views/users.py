@@ -1,6 +1,6 @@
 #coding: utf-8
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from builder.models import User, UserRole, Role
 from builder.forms.user import UserForm, RoleForm
@@ -64,10 +64,14 @@ def user_details(user_id):
 @blueprint.route('/<user_id>/toogle', methods=['GET'])
 def toggle_user(user_id):
     user = User.query.get(user_id)
+
     if user:
-        action = 'desativado' if user.active else 'ativado'
-        user.toggle_status()
-        flash('Usuário {} foi {}.'.format(user.username, action), category='success')
+        if user != current_user:
+            action = 'desativado' if user.active else 'ativado'
+            user.toggle_status()
+            flash('Usuário {} foi {}.'.format(user.username, action), category='success')
+        else:
+            flash('Voce não pode alterar seus próprios usuário!', category='info')
 
     else:
         flash('Usuário não encontrado!', category='danger')
@@ -123,11 +127,11 @@ def set_role(user_id, role_id):
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
     try:
-        UserRole.set_role(user, role)
+        user.set_role(role)
         flash('Permissão {} atrelada ao usuário {} com sucesso'.format(role.name, user.username), category='success')
 
     except:
-        flash('Erro ao adicionar permissão!')
+        flash('Erro ao adicionar permissão!', category='danger')
 
     return redirect(request.referrer)
 
@@ -137,11 +141,16 @@ def set_role(user_id, role_id):
 def unset_role(user_id, role_id):
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
+
+    if user == current_user:
+        flash('Não pode remover seus próprios acessos!', category='info')
+        return redirect(request.referrer)
+
     try:
-        UserRole.delete_role(user, role)
+        user.remove_role(role)
         flash('Permissão {} removida do usuário {} com sucesso'.format(role.name, user.username), category='success')
 
     except:
-        flash('Erro ao remover permissão!')
+        flash('Erro ao remover permissão!', category='danger')
 
     return redirect(request.referrer)

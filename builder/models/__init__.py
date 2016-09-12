@@ -74,6 +74,5 @@ class Model(db.Model, ModelMixin):
     query_class = Query
 
 
-from builder.models.user import User # noqa
+from builder.models.user import User, UserRole # noqa
 from builder.models.role import Role # noqa
-from builder.models.user_role import UserRole # noqa

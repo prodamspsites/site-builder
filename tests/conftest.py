@@ -97,13 +97,13 @@ def all(request, app, db_session):
 
 
 @pytest.fixture()
-def superuser():
-    from builder.models import User
+def superuser(superuser_role):
+    from builder.models import User, UserRole
     user = User()
     user.username = 'Darth_Vader'
     user.email = 'mayforce@bewith.you'
     user.password = user.generate_password(password='12345678')
-    user.superuser = True
+    user.set_role(superuser_role)
     user.save(commit=True)
     return user
 
@@ -117,3 +117,39 @@ def user():
     user.password = user.generate_password(password='12345678')
     user.save(commit=True)
     return user
+
+
+@pytest.fixture()
+def superuser_role():
+    from builder.models import Role
+    role = Role()
+    role.name = 'superuser'
+    role.save(commit=True)
+    return role
+
+
+@pytest.fixture()
+def admin_role():
+    from builder.models import Role
+    role = Role()
+    role.name = 'admin'
+    role.save(commit=True)
+    return role
+
+
+@pytest.fixture()
+def client_role():
+    from builder.models import Role
+    role = Role()
+    role.name = 'client'
+    role.save(commit=True)
+    return role
+
+
+@pytest.fixture()
+def reviewer_role():
+    from builder.models import Role
+    role = Role()
+    role.name = 'reviewer'
+    role.save(commit=True)
+    return role
