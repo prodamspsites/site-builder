@@ -2,10 +2,7 @@
 {% block layout %}
     <div class="row">
         <div id="content" class="col-md-offset-1 col-md-5">{% block content %}{% endblock %}</div>
-        <div id="menu" class="col-md-5">
-            <div class="well">
-                {% block info %}{% endblock %}
-            </div>
+        <div id="menu" class="col-md-5">{% block info %}{% endblock %}</div>
         </div>
     </div>
 {% endblock %}

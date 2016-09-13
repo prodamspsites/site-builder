@@ -3,5 +3,8 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <h3>Bem vindo Usuário!</h3>
+        <h3>Bem vindo {{ current_user.name }}!</h3>
+        {% if current_user.last_login_at %}
+            Seu último acesso foi em: {{ current_user.last_login_at | strftime }}
+        {% endif %}
 {% endblock %}
