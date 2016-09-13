@@ -15,6 +15,7 @@ blueprint = Blueprint('users', __name__, template_folder='templates', static_fol
 @blueprint.route('/list', methods=['GET'])
 @login_required
 def list_users():
+    """Return list of all users in database"""
     users = User.query.order_by(User.created_at.asc()).all()
     return render_template('users/list-users.html', users=users)
 
@@ -22,6 +23,7 @@ def list_users():
 @login_required
 @blueprint.route('/add', methods=['GET', 'POST'])
 def add_user():
+    """Add new user to system"""
     form = UserForm()
     if form.validate_on_submit():
         try:
@@ -53,6 +55,7 @@ def add_user():
 @login_required
 @blueprint.route('/<user_id>', methods=['GET'])
 def user_details(user_id):
+    """Get user details and your security groups"""
     user = User.query.get(user_id)
     if not user:
         flash('Usuário não existe!', category='info')
@@ -61,8 +64,9 @@ def user_details(user_id):
 
 
 @login_required
-@blueprint.route('/<user_id>/toogle', methods=['GET'])
+@blueprint.route('/<user_id>/toggle', methods=['GET'])
 def toggle_user(user_id):
+    """Toggle status of user"""
     user = User.query.get(user_id)
 
     if user:
@@ -82,6 +86,7 @@ def toggle_user(user_id):
 @login_required
 @blueprint.route('/roles', methods=['GET'])
 def list_roles():
+    """List all roles in database"""
     roles = Role.query.order_by(Role.id.asc()).all()
     return render_template('users/list-roles.html', roles=roles)
 
@@ -89,6 +94,7 @@ def list_roles():
 @login_required
 @blueprint.route('/add_role', methods=['GET', 'POST'])
 def add_role():
+    """Add role in system"""
     role_form = RoleForm()
     if role_form.validate_on_submit():
         try:
@@ -109,6 +115,7 @@ def add_role():
 @login_required
 @blueprint.route('/role/<role_id>/toogle', methods=['GET'])
 def toggle_role(role_id):
+    """Toggle status of role"""
     role = Role.query.get(role_id)
     if role:
         action = 'desativado' if role.active else 'ativado'
@@ -124,6 +131,7 @@ def toggle_role(role_id):
 @login_required
 @blueprint.route('/<user_id>/role/<role_id>', methods=['GET'])
 def set_role(user_id, role_id):
+    """View to set role of user"""
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
     try:
@@ -139,6 +147,7 @@ def set_role(user_id, role_id):
 @login_required
 @blueprint.route('/<user_id>/role/<role_id>/remove', methods=['GET'])
 def unset_role(user_id, role_id):
+    """View to remove role of user"""
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
 

@@ -1,5 +1,6 @@
 # coding: utf-8
 def register_blueprints(app):
+    """Shortcut to register all blueprints of system"""
     from builder.views.security import blueprint as security_blueprint
     from builder.views.dashboard import blueprint as dashboard_blueprint
     from builder.views.users import blueprint as users_blueprint
@@ -10,11 +11,13 @@ def register_blueprints(app):
 
 
 def register_template_filters(app):
+    """Shortcut to register all template filters"""
     app.add_template_filter(convert_time, 'strftime')
     return app
 
 
 def convert_time(date, format=None):
+    """Convert to ideal time in templates"""
     if not date:
         return '-'
     if format:

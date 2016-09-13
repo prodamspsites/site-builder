@@ -8,7 +8,6 @@ from flask.testing import FlaskClient
 from builder.main import db
 
 
-
 def monkey_patch_sqlalchemy():
     """
     Replaces the SQLAlchemy `session.remove` method with a NOP. This avoids

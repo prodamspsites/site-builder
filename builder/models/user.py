@@ -28,18 +28,22 @@ class User(Model, UserMixin):
 
     @property
     def superuser(self):
+        """Return superuser status"""
         return self.search_user_role('superuser')
 
     @property
     def admin(self):
+        """Return admin status"""
         return self.search_user_role('admin')
 
     @property
     def client(self):
+        """Return client status"""
         return self.search_user_role('client')
 
     @property
     def reviewer(self):
+        """Return reviewer status"""
         return self.search_user_role('reviewer')
 
     @property
@@ -52,6 +56,7 @@ class User(Model, UserMixin):
 
     @property
     def roles_available(self):
+        """Return roles available to attached in this user"""
         roles = Role.query.filter(Role.active == True).all()
         available_roles = []
         for role in roles:
@@ -98,6 +103,7 @@ class User(Model, UserMixin):
 
     @classmethod
     def validate_username_and_email(cls, username, email):
+        """Validate if username and email are available"""
         email_user = cls.query.filter(User.username == username).first()
         name_user = cls.query.filter(User.email == email).first()
         if name_user or email_user:
@@ -172,6 +178,7 @@ class User(Model, UserMixin):
             return False
 
     def set_role(self, role):
+        """Set role to self user"""
         if self.has_role(role):
             raise UserAlreadyInRole
 
@@ -181,6 +188,7 @@ class User(Model, UserMixin):
         user_role.save(commit=True)
 
     def remove_role(self, role):
+        """Remove role to self user"""
         user_role = UserRole.query.filter(UserRole.user == self, UserRole.role == role).first()
 
         if not user_role:
@@ -190,6 +198,7 @@ class User(Model, UserMixin):
         db.session.commit()
 
     def reload_stats(self):
+        """Reload all stats for login"""
         self.last_login_at = self.current_login_at
         self.current_login_at = datetime.now()
         self.login_count = self.login_count + 1

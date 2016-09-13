@@ -12,6 +12,7 @@ blueprint = Blueprint('security', __name__, template_folder='templates', static_
 
 @blueprint.route('/', methods=['GET', 'POST'])
 def login():
+    """Used for login user through web"""
     login_form = security.LoginForm()
     if login_form.validate_on_submit():
         username = login_form.username.data
@@ -41,15 +42,18 @@ def login():
 
 @blueprint.route('/support', methods=['GET', 'POST'])
 def suppport():
+    """Return page of support"""
     return render_template('security/support.html')
 
 
 @blueprint.route('/logout', methods=['GET'])
 def logout():
+    """Logout current user"""
     logout_user()
     return redirect(url_for('security.login'))
 
 
 @blueprint.route('/not_authorized', methods=['GET'])
 def not_authorized():
+    """In case of user access page without permission"""
     return render_template('security/not-authorized.html')
