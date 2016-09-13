@@ -13,7 +13,7 @@ def home():
     return render_template('dashboard/index.html')
 
 
-@blueprint.route('/change-password', methods=['POST'])
+@blueprint.route('/change-password', methods=['GET','POST'])
 @login_required
 def change_password():
     """Default view to change password"""
