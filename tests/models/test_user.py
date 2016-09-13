@@ -3,27 +3,32 @@ import pytest
 import mock
 
 from builder.exceptions import (UserAlreadyExist, InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch,
-                                UserNotFound, InvalidCredentials, UserAlreadyInRole, UserNotHasRole)
+                                UserNotFound, InvalidCredentials, UserAlreadyInRole, UserNotHasRole, EmptyUserName)
 from builder.models import User
 
 
 def test_create_user_with_success():
-    User.create(username='testuser', email='test1@gmail.com', password='12345678', confirm_password='12345678')
+    User.create(username='testuser',
+                email='test1@gmail.com',
+                name='test',
+                password='12345678',
+                confirm_password='12345678')
     user = User.query.filter_by(username='testuser').one()
     assert user.email == 'test1@gmail.com'
 
 
-@pytest.mark.parametrize('exception, username, email, password, confirm_password', [
-    (UserAlreadyExist, 'Chewbaca', 'chew@solo.com', '12345678', '12345678'),
-    (InvalidUsername, '', 'test1@gmail.com', '12345678', '12345678'),
-    (InvalidUsername, 'test@user', 'test1@gmail.com', '12345678', '12345678'),
-    (InvalidEmail, 'testuser', 'itsnotvalidemail', '12345678', '12345678'),
-    (InvalidPassword, 'testuser', 'test1@gmail.com', '', ''),
-    (PasswordMismatch, 'testuser', 'test1@gmail.com', '12345678', '87654321'),
+@pytest.mark.parametrize('exception, username, name, email, password, confirm_password', [
+    (UserAlreadyExist, 'Chewbaca', 'Chewbaca da Silva', 'chew@solo.com', '12345678', '12345678'),
+    (InvalidUsername, '', 'teste', 'test1@gmail.com', '12345678', '12345678'),
+    (InvalidUsername, 'test@user', 'teste', 'test1@gmail.com', '12345678', '12345678'),
+    (InvalidEmail, 'testuser', 'teste', 'itsnotvalidemail', '12345678', '12345678'),
+    (InvalidPassword, 'testuser', 'teste', 'test1@gmail.com', '', ''),
+    (PasswordMismatch, 'testuser', 'teste', 'test1@gmail.com', '12345678', '87654321'),
+    (EmptyUserName, 'testuser', '', 'test1@gmail.com', '12345678', '12345678')
 ])
-def test_create_user_raises_error(user, exception, username, email, password, confirm_password):
+def test_create_user_raises_error(user, exception, username, name, email, password, confirm_password):
     with pytest.raises(exception):
-        User.create(username=username, email=email, password=password, confirm_password=confirm_password)
+        User.create(username=username, email=email, name=name, password=password, confirm_password=confirm_password)
 
 
 def test_change_user_password_with_success(user):
@@ -49,7 +54,7 @@ def test_get_user_with_username(user):
 
 def test_get_user_with_email(user):
     user = User.by_login('chewe@solo.com')
-    assert str(user) == '<User[1] username=\'Chewbaca\'>'
+    assert str(user) == '<User[1] name=\'Chewbaca da Silva\'>'
 
 
 def test_get_inexistent_user():

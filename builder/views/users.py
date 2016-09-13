@@ -2,10 +2,11 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
-from builder.models import User, UserRole, Role
+from builder.models import User, Role
 from builder.forms.user import UserForm, RoleForm
 from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist,
-                                RoleAlreadyExist, InvalidRoleName)
+                                RoleAlreadyExist, InvalidRoleName, EmptyUserName)
+from builder.views import login_permission
 
 
 blueprint = Blueprint('users', __name__, template_folder='templates', static_folder='static')
@@ -14,14 +15,16 @@ blueprint = Blueprint('users', __name__, template_folder='templates', static_fol
 @blueprint.route('/', methods=['GET'])
 @blueprint.route('/list', methods=['GET'])
 @login_required
+@login_permission('admin')
 def list_users():
     """Return list of all users in database"""
     users = User.query.order_by(User.created_at.asc()).all()
     return render_template('users/list-users.html', users=users)
 
 
-@login_required
 @blueprint.route('/add', methods=['GET', 'POST'])
+@login_required
+@login_permission('admin')
 def add_user():
     """Add new user to system"""
     form = UserForm()
@@ -29,6 +32,7 @@ def add_user():
         try:
             user = User.create(username=form.username.data,
                                email=form.email.data,
+                               name=form.name.data,
                                password=form.password.data,
                                confirm_password=form.password.data)
             flash('Usuário {} criado com sucesso!'.format(user.username), category='success')
@@ -49,11 +53,15 @@ def add_user():
         except UserAlreadyExist:
             flash('Usuário ou email já existem!', category='danger')
 
+        except EmptyUserName:
+            flash('Nome do usuário vazio!', category='danger')
+
     return render_template('users/add-user.html', form=form)
 
 
-@login_required
 @blueprint.route('/<user_id>', methods=['GET'])
+@login_required
+@login_permission('admin')
 def user_details(user_id):
     """Get user details and your security groups"""
     user = User.query.get(user_id)
@@ -63,8 +71,9 @@ def user_details(user_id):
     return render_template('users/details-user.html', user=user)
 
 
-@login_required
 @blueprint.route('/<user_id>/toggle', methods=['GET'])
+@login_required
+@login_permission('admin')
 def toggle_user(user_id):
     """Toggle status of user"""
     user = User.query.get(user_id)
@@ -83,16 +92,18 @@ def toggle_user(user_id):
     return redirect(url_for('users.list_users'))
 
 
-@login_required
 @blueprint.route('/roles', methods=['GET'])
+@login_required
+@login_permission('superuser')
 def list_roles():
     """List all roles in database"""
     roles = Role.query.order_by(Role.id.asc()).all()
     return render_template('users/list-roles.html', roles=roles)
 
 
-@login_required
 @blueprint.route('/add_role', methods=['GET', 'POST'])
+@login_required
+@login_permission('superuser')
 def add_role():
     """Add role in system"""
     role_form = RoleForm()
@@ -112,8 +123,9 @@ def add_role():
     return render_template('users/add-role.html', form=role_form)
 
 
-@login_required
 @blueprint.route('/role/<role_id>/toogle', methods=['GET'])
+@login_required
+@login_permission('superuser')
 def toggle_role(role_id):
     """Toggle status of role"""
     role = Role.query.get(role_id)
@@ -128,15 +140,19 @@ def toggle_role(role_id):
     return redirect(url_for('users.list_roles'))
 
 
-@login_required
 @blueprint.route('/<user_id>/role/<role_id>', methods=['GET'])
+@login_required
+@login_permission('admin')
 def set_role(user_id, role_id):
     """View to set role of user"""
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
     try:
-        user.set_role(role)
-        flash('Permissão {} atrelada ao usuário {} com sucesso'.format(role.name, user.username), category='success')
+        if role.name == 'superuser' and not current_user.superuser:
+            flash('Permissão de superusuário só pode ser atribuída por outro superusuário', category='danger')
+        else:
+            user.set_role(role)
+            flash('Permissão {} atrelada ao usuário {}.'.format(role.name, user.username), category='success')
 
     except:
         flash('Erro ao adicionar permissão!', category='danger')
@@ -144,8 +160,9 @@ def set_role(user_id, role_id):
     return redirect(request.referrer)
 
 
-@login_required
 @blueprint.route('/<user_id>/role/<role_id>/remove', methods=['GET'])
+@login_required
+@login_permission('admin')
 def unset_role(user_id, role_id):
     """View to remove role of user"""
     user = User.query.get(user_id)
@@ -156,8 +173,11 @@ def unset_role(user_id, role_id):
         return redirect(request.referrer)
 
     try:
-        user.remove_role(role)
-        flash('Permissão {} removida do usuário {} com sucesso'.format(role.name, user.username), category='success')
+        if role.name == 'superuser' and not current_user.superuser:
+            flash('Permissão de superusuário só pode ser removida por outro superusuário', category='danger')
+        else:
+            user.remove_role(role)
+            flash('Permissão {} removida do usuário {}.'.format(role.name, user.username), category='success')
 
     except:
         flash('Erro ao remover permissão!', category='danger')

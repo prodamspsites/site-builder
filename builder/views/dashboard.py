@@ -13,13 +13,8 @@ def home():
     return render_template('dashboard/index.html')
 
 
-@blueprint.route('/config', methods=['GET'])
-def config():
-    """Default template for configuration"""
-    return render_template('dashboard/config.html')
-
-
-@blueprint.route('/change-password', methods=['GET'])
+@blueprint.route('/change-password', methods=['POST'])
+@login_required
 def change_password():
     """Default view to change password"""
     return render_template('dashboard/change-password.html')

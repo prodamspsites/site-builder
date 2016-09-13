@@ -30,6 +30,7 @@ def upgrade():
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('username', sa.String(length=30), nullable=False),
         sa.Column('email', sa.String(length=255), nullable=False),
+        sa.Column('name', sa.String(length=80), nullable=False),
         sa.Column('password', sa.String(length=255), nullable=False),
         sa.Column('active', sa.Boolean(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),

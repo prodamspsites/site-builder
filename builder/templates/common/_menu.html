@@ -13,12 +13,16 @@
   <div id="navbar6" class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-left">
       <li><a href="{{ url_for('dashboard.home') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-      <li><a href="{{ url_for('users.list_users') }}"><span class="glyphicon glyphicon-user"></span> Usuários</a></li>
-      <li><a href="{{ url_for('users.list_roles') }}"><span class="glyphicon glyphicon-lock"></span> Permissões</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-th-list"></span> Projetos</a></li>
+      {% if current_user.superuser or current_user.admin %}
+        <li><a href="{{ url_for('users.list_users') }}"><span class="glyphicon glyphicon-user"></span> Usuários</a></li>
+      {% endif %}
+      {% if current_user.superuser %}
+        <li><a href="{{ url_for('users.list_roles') }}"><span class="glyphicon glyphicon-lock"></span> Permissões</a></li>
+      {% endif %}
+      <li><a href="{{ url_for('core.list_projects') }}"><span class="glyphicon glyphicon-th-list"></span> Projetos</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="{{ url_for('dashboard.config') }}"><span class="glyphicon glyphicon-cog"></span> Configurações</a></li>
+      <li><a href="{{ url_for('dashboard.change_password') }}"><span class="glyphicon glyphicon-cog"></span> Alterar Senha</a></li>
       <li><a href="{{ url_for('security.logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
     </ul>
   </div>

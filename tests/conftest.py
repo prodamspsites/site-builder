@@ -101,6 +101,7 @@ def superuser(superuser_role):
     user = User()
     user.username = 'Darth_Vader'
     user.email = 'mayforce@bewith.you'
+    user.name = 'Anakin Skywalker'
     user.password = user.generate_password(password='12345678')
     user.set_role(superuser_role)
     user.save(commit=True)
@@ -113,6 +114,7 @@ def user():
     user = User()
     user.username = 'Chewbaca'
     user.email = 'chewe@solo.com'
+    user.name = 'Chewbaca da Silva'
     user.password = user.generate_password(password='12345678')
     user.save(commit=True)
     return user

@@ -15,15 +15,29 @@ if __name__ == '__main__':
         from builder.models import User, Role, UserRole
 
         print('Add users for system...')
-        superuser = User.create(username='superuser',
-                                email='superuser@prodam.sp.gov.br',
-                                password='prodam123',
-                                confirm_password='prodam123')
-
-        commonuser = User.create(username='prodam',
-                                 email='prodam@prodam.sp.gov.br',
+        super_user = User.create(username='superuser',
+                                 email='superuser@prodam.sp.gov.br',
+                                 name='Prodam Superusuário',
                                  password='prodam123',
                                  confirm_password='prodam123')
+
+        admin_user = User.create(username='admin',
+                                 email='admin@prodam.sp.gov.br',
+                                 name='Prodam Administrador',
+                                 password='prodam123',
+                                 confirm_password='prodam123')
+
+        client_user = User.create(username='client',
+                                  email='client@prodam.sp.gov.br',
+                                  name='Prodam Administrador',
+                                  password='prodam123',
+                                  confirm_password='prodam123')
+
+        common_user = User.create(username='prodam',
+                                  email='prodam@prodam.sp.gov.br',
+                                  name='Prodam Revisor',
+                                  password='prodam123',
+                                  confirm_password='prodam123')
 
         print('Add roles...')
         superuser_role = Role.create('superuser')
@@ -31,11 +45,10 @@ if __name__ == '__main__':
         client_role = Role.create('client')
         reviewer_role = Role.create('reviewer')
 
-        print('Set roles to user...')
-        superuser.set_role(superuser_role)
-        superuser.set_role(admin_role)
-        superuser.set_role(client_role)
-        superuser.set_role(reviewer_role)
-        commonuser.set_role(reviewer_role)
+        print('Set roles to users...')
+        super_user.set_role(superuser_role)
+        admin_user.set_role(admin_role)
+        client_user.set_role(client_role)
+        common_user.set_role(reviewer_role)
 
         print('Finish!')

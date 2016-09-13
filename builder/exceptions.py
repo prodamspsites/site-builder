@@ -33,6 +33,9 @@ class UserNotFound(BaseException):
 class UserAlreadyExist(BaseException):
     pass
 
+class EmptyUserName(BaseException):
+    pass
+
 
 class UserNotHasRole(BaseException):
     pass

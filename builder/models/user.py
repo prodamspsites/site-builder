@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from builder.exceptions import (InvalidPassword, InvalidUsername, InvalidEmail, PasswordMismatch, UserAlreadyExist,
-                                UserNotFound, UserNotHasRole, InvalidCredentials, UserAlreadyInRole)
+                                UserNotFound, UserNotHasRole, InvalidCredentials, UserAlreadyInRole, EmptyUserName)
 from builder.models import Model, db
 from builder.models.role import Role
 
@@ -19,6 +19,7 @@ class User(Model, UserMixin):
 
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean(), default=True)
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
@@ -76,7 +77,7 @@ class User(Model, UserMixin):
         return user
 
     @classmethod
-    def create(cls, username, email, password, confirm_password):
+    def create(cls, username, email, name, password, confirm_password):
         """ Create a new user """
         if not cls.verify_username(username):
             raise InvalidUsername
@@ -93,9 +94,13 @@ class User(Model, UserMixin):
         if not cls.validate_username_and_email(username, email):
             raise UserAlreadyExist
 
+        if not name:
+            raise EmptyUserName
+
         user = User()
         user.username = username
         user.email = email
+        user.name = name
         user.password = cls.generate_password(password)
         user.save()
         db.session.commit()
