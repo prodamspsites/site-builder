@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_user, logout_user, current_user
 
-from builder.forms import security
+from builder.forms import LoginForm
 from builder.models import User
 from builder.exceptions import UserNotFound, PasswordMismatch
 
@@ -13,10 +13,10 @@ blueprint = Blueprint('security', __name__, template_folder='templates', static_
 @blueprint.route('/', methods=['GET', 'POST'])
 def login():
     """Used for login user through web"""
-    login_form = security.LoginForm()
-    if login_form.validate_on_submit():
-        username = login_form.username.data
-        password = login_form.password.data
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
         try:
             user = User.by_login(username)
             if user.validate_password(password):
@@ -37,7 +37,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard.home'))
 
-    return render_template('security/login.html', login_form=login_form, form_action=url_for('security.login'))
+    return render_template('security/login.html', form=form, form_action=url_for('security.login'))
 
 
 @blueprint.route('/support', methods=['GET', 'POST'])
