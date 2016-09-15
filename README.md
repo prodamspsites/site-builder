@@ -92,6 +92,9 @@ Adicionalmente há um Makefile com alguns atalhos:
 - `migrate_db`: Cria uma nova migração
 - `runserver`: Inicializa o servidor local
 - `deps`: Instala as dependências do projeto
+- `init_env`: Roda comandos para configuração inicial*
+
+*Precisa ter instalado a base de dados antes - Via docker ou não.
 
 [0]:https://github.com/yyuu/pyenv
 [1]:https://github.com/yyuu/pyenv-virtualenv

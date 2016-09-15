@@ -25,3 +25,9 @@ runserver:
 
 deps:
 	pip install -r requirements/dev.txt
+
+init_env:
+	pip install -r requirements/dev.txt
+	cp builder/config/local.py.example builder/config/local.py
+	python manage.py db upgrade
+	python scripts/add_some_users.py
