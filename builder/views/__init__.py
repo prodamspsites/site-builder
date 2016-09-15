@@ -1,6 +1,6 @@
 # coding: utf-8
 from functools import wraps
-from flask import redirect, url_for
+from flask import redirect, url_for, current_app
 from flask_login import current_user
 
 from builder.models import User, Role
@@ -14,7 +14,7 @@ def login_permission(group):
         def wrapper(*args, **kwargs):
             user = User.query.get(current_user.get_id())
             try:
-                permissions = PERMISSION_GROUPS[group]
+                permissions = current_app.config['PERMISSION_GROUPS'][group]
                 for permission in permissions:
                     role = Role.search_role(name=permission, exactly=True)
                     if user.has_role(role):
@@ -24,11 +24,3 @@ def login_permission(group):
             return redirect(url_for('security.not_authorized'))
         return wrapper
     return decorator
-
-
-PERMISSION_GROUPS = {
-    'superuser': ['superuser'],
-    'admin': ['superuser', 'admin'],
-    'client': ['superuser', 'admin', 'client'],
-    'reviewer': ['superuser', 'admin', 'client', 'reviewer'],
-}

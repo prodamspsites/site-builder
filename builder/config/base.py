@@ -9,3 +9,9 @@ class BaseConfig(object):
 
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DEBUG = False
+
+    PERMISSION_GROUPS = {
+        'superuser': ['superuser'],
+        'admin': ['superuser', 'admin'],
+        'client': ['superuser', 'admin', 'client'],
+    }
