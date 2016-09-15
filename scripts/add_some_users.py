@@ -12,7 +12,7 @@ if __name__ == '__main__':
     app = create_app()
 
     with app.app_context():
-        from builder.models import User, Role, UserRole
+        from builder.models import User, Role
 
         print('Add users for system...')
         super_user = User.create(username='superuser',
