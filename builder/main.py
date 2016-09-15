@@ -11,8 +11,8 @@ db = SQLAlchemy()
 
 def create_app():
     """Factory app"""
-    config_object = 'builder.config.{}.Config'.format(os.environ.get('BUILDER_ENV') or 'local')
     app = Flask(__name__)
+    config_object = 'builder.config.{}.Config'.format(os.environ.get('BUILDER_ENV') or 'local')
     app.config.from_object(config_object)
     app.debug = app.config['DEBUG']
 

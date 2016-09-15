@@ -10,15 +10,15 @@ class InvalidCredentials(BaseException):
     pass
 
 
-class InvalidUsername(InvalidCredentials):
+class InvalidUsername(BaseException):
     pass
 
 
-class InvalidPassword(InvalidCredentials):
+class InvalidPassword(BaseException):
     pass
 
 
-class InvalidEmail(InvalidCredentials):
+class InvalidEmail(BaseException):
     pass
 
 

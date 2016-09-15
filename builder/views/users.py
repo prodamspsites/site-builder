@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
 from builder.models import User, Role
-from builder.forms.user import UserForm, RoleForm
+from builder.forms import UserForm, RoleForm
 from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist,
                                 RoleAlreadyExist, InvalidRoleName, EmptyUserName)
 from builder.views import login_permission
@@ -106,11 +106,11 @@ def list_roles():
 @login_permission('superuser')
 def add_role():
     """Add role in system"""
-    role_form = RoleForm()
-    if role_form.validate_on_submit():
+    form = RoleForm()
+    if form.validate_on_submit():
         try:
-            role = Role.create(name=role_form.name.data,
-                               description=role_form.description.data)
+            role = Role.create(name=form.name.data,
+                               description=form.description.data)
             flash('Permissão {} criado com sucesso!'.format(role.name), category='success')
             return redirect(url_for('users.list_roles'))
 
@@ -120,7 +120,7 @@ def add_role():
         except RoleAlreadyExist:
             flash('Permissão já existe!', category='danger')
 
-    return render_template('users/add-role.html', form=role_form)
+    return render_template('users/add-role.html', form=form)
 
 
 @blueprint.route('/role/<role_id>/toogle', methods=['GET'])
