@@ -91,3 +91,5 @@ ENV/
 
 # Pycharm
 .idea
+
+local.py

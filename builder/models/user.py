@@ -43,11 +43,6 @@ class User(Model, UserMixin):
         return self.search_user_role('client')
 
     @property
-    def reviewer(self):
-        """Return reviewer status"""
-        return self.search_user_role('reviewer')
-
-    @property
     def roles(self):
         """Return all roles of this user"""
         roles = []

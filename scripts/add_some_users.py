@@ -29,26 +29,24 @@ if __name__ == '__main__':
 
         client_user = User.create(username='client',
                                   email='client@prodam.sp.gov.br',
-                                  name='Prodam Administrador',
+                                  name='Prodam Cliente',
                                   password='prodam123',
                                   confirm_password='prodam123')
 
         common_user = User.create(username='prodam',
                                   email='prodam@prodam.sp.gov.br',
-                                  name='Prodam Revisor',
+                                  name='Prodam Usuário Comum',
                                   password='prodam123',
                                   confirm_password='prodam123')
 
         print('Add roles...')
-        superuser_role = Role.create('superuser')
-        admin_role = Role.create('admin')
-        client_role = Role.create('client')
-        reviewer_role = Role.create('reviewer')
+        superuser_role = Role.create(name='superuser', description='Super Usuário')
+        admin_role = Role.create(name='admin', description='Administrador')
+        client_role = Role.create(name='client', description='Cliente')
 
         print('Set roles to users...')
         super_user.set_role(superuser_role)
         admin_user.set_role(admin_role)
         client_user.set_role(client_role)
-        common_user.set_role(reviewer_role)
 
         print('Finish!')
