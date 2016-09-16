@@ -4,7 +4,9 @@ import os
 os.environ['BUILDER_ENV'] = 'test'
 
 import pytest
+from flask import url_for
 from flask.testing import FlaskClient
+from webtest import TestApp
 from builder.main import db
 
 
@@ -93,6 +95,33 @@ def all(request, app, db_session):
         request.cls.app = app
     # This fix is to use the `all()` built-in function normally
     return __builtins__['all']
+
+
+@pytest.yield_fixture()
+def client(app):
+    with app.test_client() as _client:
+        yield _client
+
+
+@pytest.fixture()
+def webtest(app):
+    return TestApp(app)
+
+
+@pytest.fixture()
+def login(webtest):
+    def helper(username, password):
+        login_view = webtest.get(url_for('security.login')).maybe_follow()
+        form = login_view.form
+        form['username'] = username
+        form['password'] = password
+        return form.submit().maybe_follow()
+    return helper
+
+
+@pytest.fixture()
+def su_login(login, superuser):
+    return login(username='Darth_Vader', password='12345678')
 
 
 @pytest.fixture()
