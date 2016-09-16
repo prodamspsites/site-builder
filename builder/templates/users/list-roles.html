@@ -3,8 +3,6 @@
 {% block title %}Lista de usuários{% endblock %}
 
 {% block content %}
-    {% include "common/_messages.html" %}
-
     <div class="row text-right">
         <a class="btn btn-success" href="{{ url_for('users.add_role') }}">
             <span class="glyphicon glyphicon-plus"></span> Adicionar Permissão
