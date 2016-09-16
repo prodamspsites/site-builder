@@ -23,7 +23,6 @@
 <form action="" id="roleForm" method="POST">
   {{ form.hidden_tag() }}
 
-  {% include "common/_messages.html" %}
   <div class="form-group col-md-12">
     {{ form.name(placeholder=form.name.description, class='form-control', type='text', size='20') }}
   </div>

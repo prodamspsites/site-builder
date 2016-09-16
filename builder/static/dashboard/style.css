@@ -17,3 +17,7 @@ Responsive navbar-brand image CSS
   background: url(http://saopauloaberta.prefeitura.sp.gov.br/wp-content/uploads/2014/06/logoProdam-incompleto-horizon.png) center / contain no-repeat;
   width: 200px;
 }
+
+.row{
+  margin: 0px;
+}
