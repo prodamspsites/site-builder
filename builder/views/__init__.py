@@ -21,6 +21,5 @@ def login_permission(group):
                         return function(*args, **kwargs)
             except RoleNotFound:
                 return redirect(url_for('security.not_authorized'))
-            return redirect(url_for('security.not_authorized'))
         return wrapper
     return decorator

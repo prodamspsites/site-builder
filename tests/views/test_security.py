@@ -54,4 +54,4 @@ def test_change_password_without_success(old_password, password, confirm, messag
     form['password'] = password
     form['confirm'] = confirm
     response = form.submit().maybe_follow()
-    assert message in response.body.decode()
+    assert message == response.flashes[0][1]

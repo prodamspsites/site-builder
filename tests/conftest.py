@@ -6,7 +6,7 @@ os.environ['BUILDER_ENV'] = 'test'
 import pytest
 from flask import url_for
 from flask.testing import FlaskClient
-from webtest import TestApp
+from flask_webtest import TestApp
 from builder.main import db
 
 
