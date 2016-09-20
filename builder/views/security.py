@@ -22,16 +22,12 @@ def login():
             if user.validate_password(password):
                 login_user(user)
                 user.reload_stats()
-                return redirect(url_for('dashboard.home'))
+                return redirect(url_for('security.home'))
             else:
                 raise PasswordMismatch
 
         except (UserNotFound, PasswordMismatch):
             flash('Usuário ou senha inválido', category='danger')
-            return redirect(url_for('security.login'))
-
-        except:
-            flash('Ocorreu um erro inesperado, tente mais tarde', category='info')
             return redirect(url_for('security.login'))
 
     if current_user.is_authenticated:
