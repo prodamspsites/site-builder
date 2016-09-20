@@ -13,8 +13,7 @@ Construtor padrão de sites usado para criação de sites e hotsites.
 
 ## Instalação
 
-Para instalar, sugiro antes que avalie o uso da ferramenta [Pyenv][0] e 
-o plugin [Virtualenv][1]. 
+Para instalar, sugiro antes que avalie o uso da ferramenta [Pyenv][0] e o plugin [Virtualenv][1].
 
 - Crie um ambiente com Python 3.5.2
 - Instale as depêndencias: `pip install -r requirements/dev.txt`
@@ -26,14 +25,20 @@ o plugin [Virtualenv][1].
 - Inicie o servidor com: `python manage.py runserver`
 
 
+**Obs:** Se houver erro na instalação do `pyscopg2`, instale a biblioteca de desenvolvedor de PostgreSQL:
+
+- **Ubuntu**: `apt-get install libpq-dev`
+- **CentOS**: `yum install postgresql-devel`
+- **Arch**: `pacman -S postgresql-libs`
+
+
 ## Base de Dados
 
-O Site Builder foi feito para user o [PostgreSQL][2], e no repositório
-ele está configurado através de Docker, se quiser utilizar, lembre-se de
-instalar o [Docker][3] e o [Docker-Compose][4].
+O Site Builder foi feito para user o [PostgreSQL][2], e no repositório ele está configurado através de Docker, se quiser
+utilizar, lembre-se de instalar o [Docker][3] e o [Docker-Compose][4].
 
-Senão quiser fazer a instalação através de Docker, pode fazer a 
-instalação direto no Sistema Operacional e criar a seguinte estrutura:
+Senão quiser fazer a instalação através de Docker, pode fazer a  instalação direto no Sistema Operacional e criar a
+seguinte estrutura:
 
 - **Usuário**: root
 - **Senha**: auth
@@ -50,16 +55,13 @@ Para criar uma migração deve seguir os seguintes passos:
 - Renomeie o arquivo colocando um titulo após o under (`_`)
 - Revise o arquivo para vericar inconsistências
 
-**Observação:** Nas migrações, são importante tanto os comandos de 
-upgrade quanto downgrade, então é relevante que o script seja criado 
-para ambos os lados e serem testados antes de ser enviado para o 
-repositório.
+**Observação:** Nas migrações, são importante tanto os comandos de upgrade quanto downgrade, então é relevante que o
+script seja criado para ambos os lados e serem testados antes de ser enviado para o repositório.
 
 
 ## Testes Unitários
 
-A ferramenta de teste utilizada aqui é o **Pytest** com as seguintes 
-definições:
+A ferramenta de teste utilizada aqui é o **Pytest** com as seguintes definições:
 
 - Todos os testes ficam na pasta `tests/*`
 - Os fixtures são inseridos no arquivo `tests/conftest.py`
@@ -75,8 +77,7 @@ definições:
 
 ### Coverage
 
-- Use o comando 
-`PYTHONPATH=. py.test tests --cov-report=html --cov=builder`
+- Use o comando `PYTHONPATH=. py.test tests --cov-report=html --cov=builder`
 - O coverage poderá ser visto no caminho `htmlconv/index.html`
 
 
