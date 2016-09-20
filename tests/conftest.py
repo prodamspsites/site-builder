@@ -4,7 +4,9 @@ import os
 os.environ['BUILDER_ENV'] = 'test'
 
 import pytest
+from flask import url_for
 from flask.testing import FlaskClient
+from flask_webtest import TestApp
 from builder.main import db
 
 
@@ -95,15 +97,55 @@ def all(request, app, db_session):
     return __builtins__['all']
 
 
+@pytest.yield_fixture()
+def client(app):
+    with app.test_client() as _client:
+        yield _client
+
+
+@pytest.fixture()
+def webtest(app):
+    return TestApp(app)
+
+
+@pytest.fixture()
+def login(webtest):
+    def helper(username, password):
+        login_view = webtest.get(url_for('security.login')).maybe_follow()
+        form = login_view.form
+        form['username'] = username
+        form['password'] = password
+        return form.submit().maybe_follow()
+    return helper
+
+
+@pytest.fixture()
+def su_login(login, superuser):
+    return login(username='Darth_Vader', password='12345678')
+
+
 @pytest.fixture()
 def superuser(superuser_role):
-    from builder.models import User, UserRole
+    from builder.models import User
     user = User()
     user.username = 'Darth_Vader'
     user.email = 'mayforce@bewith.you'
     user.name = 'Anakin Skywalker'
     user.password = user.generate_password(password='12345678')
     user.set_role(superuser_role)
+    user.save(commit=True)
+    return user
+
+
+@pytest.fixture()
+def admin(admin_role):
+    from builder.models import User
+    user = User()
+    user.username = 'Luke'
+    user.email = 'mayforce@bewith.me'
+    user.name = 'Luke Skywalker'
+    user.password = user.generate_password(password='12345678')
+    user.set_role(admin_role)
     user.save(commit=True)
     return user
 
@@ -125,6 +167,7 @@ def superuser_role():
     from builder.models import Role
     role = Role()
     role.name = 'superuser'
+    role.description = 'Super Usuário'
     role.save(commit=True)
     return role
 
@@ -144,5 +187,6 @@ def client_role():
     from builder.models import Role
     role = Role()
     role.name = 'client'
+    role.description = 'Cliente'
     role.save(commit=True)
     return role

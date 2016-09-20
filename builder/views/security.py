@@ -22,7 +22,7 @@ def login():
             if user.validate_password(password):
                 login_user(user)
                 user.reload_stats()
-                return redirect(url_for('security.home'))
+                return redirect(url_for('security.dashboard'))
             else:
                 raise PasswordMismatch
 
@@ -36,15 +36,10 @@ def login():
     return render_template('security/login.html', form=form, form_action=url_for('security.login'))
 
 
-@blueprint.route('/support', methods=['GET', 'POST'])
-def suppport():
-    """Return page of support"""
-    return render_template('security/support.html')
-
-
 @blueprint.route('/logout', methods=['GET'])
 def logout():
     """Logout current user"""
+    flash('Usuário deslogado!', category='info')
     logout_user()
     return redirect(url_for('security.login'))
 
@@ -84,8 +79,5 @@ def change_password():
 
         except PasswordMismatch:
             flash('Os campos senha e confirmação não estão iguais!', category='danger')
-
-        except:
-            flash('Não foi possível alterar a senha, tente mais tarde!', category='info')
 
     return render_template('security/change-password.html', form=form)

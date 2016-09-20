@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from builder.models import User, Role
 from builder.forms import UserForm, RoleForm
 from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist,
-                                RoleAlreadyExist, InvalidRoleName, EmptyUserName)
+                                RoleAlreadyExist, InvalidRoleName, EmptyUserName, UserNotHasRole, UserAlreadyInRole)
 from builder.views import login_permission
 
 
@@ -66,7 +66,7 @@ def user_details(user_id):
     """Get user details and your security groups"""
     user = User.query.get(user_id)
     if not user:
-        flash('Usuário não existe!', category='info')
+        flash('Usuário não encontrado!', category='danger')
         return redirect(url_for('users.list_users'))
     return render_template('users/details-user.html', user=user)
 
@@ -84,7 +84,7 @@ def toggle_user(user_id):
             user.toggle_status()
             flash('Usuário {} foi {}.'.format(user.username, action), category='success')
         else:
-            flash('Voce não pode alterar seus próprios usuário!', category='info')
+            flash('Voce não pode alterar seus próprios usuário!', category='warning')
 
     else:
         flash('Usuário não encontrado!', category='danger')
@@ -109,8 +109,7 @@ def add_role():
     form = RoleForm()
     if form.validate_on_submit():
         try:
-            role = Role.create(name=form.name.data,
-                               description=form.description.data)
+            role = Role.create(name=form.name.data, description=form.description.data)
             flash('Permissão {} criado com sucesso!'.format(role.name), category='success')
             return redirect(url_for('users.list_roles'))
 
@@ -154,6 +153,8 @@ def set_role(user_id, role_id):
             user.set_role(role)
             flash('Permissão {} atrelada ao usuário {}.'.format(role.name, user.username), category='success')
 
+    except UserAlreadyInRole:
+        flash('Usuário já tem essa permissão!', category='info')
     except:
         flash('Erro ao adicionar permissão!', category='danger')
 
@@ -179,6 +180,8 @@ def unset_role(user_id, role_id):
             user.remove_role(role)
             flash('Permissão {} removida do usuário {}.'.format(role.name, user.username), category='success')
 
+    except UserNotHasRole:
+        flash('Usuário já não tem essa permissão!', category='info')
     except:
         flash('Erro ao remover permissão!', category='danger')
 
