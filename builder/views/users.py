@@ -22,43 +22,6 @@ def list_users():
     return render_template('users/list-users.html', users=users)
 
 
-@blueprint.route('/add', methods=['GET', 'POST'])
-@login_required
-@login_permission('admin')
-def add_user():
-    """Add new user to system"""
-    form = UserForm()
-    if form.validate_on_submit():
-        try:
-            user = User.create(username=form.username.data,
-                               email=form.email.data,
-                               name=form.name.data,
-                               password=form.password.data,
-                               confirm_password=form.password.data)
-            flash('Usuário {} criado com sucesso!'.format(user.username), category='success')
-            return redirect(url_for('users.list_users'))
-
-        except InvalidUsername:
-            flash('Nome de usuário inválido!', category='danger')
-
-        except InvalidEmail:
-            flash('Email inválido!', category='danger')
-
-        except InvalidPassword:
-            flash('Password inválido!', category='danger')
-
-        except PasswordMismatch:
-            flash('Password e confirmação de password não estão iguais!', category='danger')
-
-        except UserAlreadyExist:
-            flash('Usuário ou email já existem!', category='danger')
-
-        except EmptyUserName:
-            flash('Nome do usuário vazio!', category='danger')
-
-    return render_template('users/add-user.html', form=form)
-
-
 @blueprint.route('/<user_id>', methods=['GET'])
 @login_required
 @login_permission('admin')

@@ -12,7 +12,6 @@ def admin_login(login, admin):
 
 @pytest.mark.parametrize('view, kwargs, template', [
     ('users.list_users', {},  'users/list-users.html'),
-    ('users.add_user', {}, 'users/add-user.html'),
     ('users.user_details', {'user_id': '1'}, 'users/details-user.html'),
     ('users.list_roles', {}, 'users/list-roles.html'),
     ('users.add_role', {}, 'users/add-role.html')
