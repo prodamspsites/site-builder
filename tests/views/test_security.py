@@ -55,3 +55,9 @@ def test_change_password_without_success(old_password, password, confirm, messag
     form['confirm'] = confirm
     response = form.submit().maybe_follow()
     assert message == response.flashes[0][1]
+
+
+def test_cached_session_send_to_dashboard(user_login, webtest):
+    response = webtest.get(url_for('security.login')).maybe_follow()
+    assert response.request.path == '/dashboard'
+    assert response.template == 'security/dashboard.html'
