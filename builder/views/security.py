@@ -22,7 +22,7 @@ def login():
             if user.validate_password(password):
                 login_user(user)
                 user.reload_stats()
-                return redirect(url_for('security.home'))
+                return redirect(url_for('security.dashboard'))
             else:
                 raise PasswordMismatch
 
