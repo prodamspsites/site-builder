@@ -17,15 +17,24 @@ class User(Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     __tablename__ = 'user'
 
-    username = db.Column(db.String(30), unique=True, nullable=False)
+    # Required Informations
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
+    # Statuses
     active = db.Column(db.Boolean(), default=True)
+    confirmed = db.Column(db.Boolean(), default=False)
+
+    # Statistics
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
     last_login_at = db.Column(db.DateTime())
+    confirmed_at = db.Column(db.DateTime())
     current_login_at = db.Column(db.DateTime())
     login_count = db.Column(db.Integer(), default=0)
+
+    # Others info
+    temporary_token = db.Column(db.String(20))
 
     @property
     def superuser(self):
