@@ -7,3 +7,5 @@ class Config(BaseConfig):
     DEBUG = True
     SECRET_KEY = 'itsasecret'
     SQLALCHEMY_DATABASE_URI = 'postgresql://root:auth@localhost:5432/prodam_builder'
+
+    MAIL_DEFAULT_SENDER = 'no-reply@local'
