@@ -3,10 +3,13 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_mail import Mail
 from builder.utils import register_blueprints, register_template_filters
 
 
 db = SQLAlchemy()
+lm = LoginManager()
+mail = Mail()
 
 
 def create_app():
@@ -17,8 +20,7 @@ def create_app():
     app.debug = app.config['DEBUG']
 
     db.init_app(app)
-
-    lm = LoginManager()
+    mail.init_app(app)
     lm.init_app(app)
 
     def load_user(user_id):
