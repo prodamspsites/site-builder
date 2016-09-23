@@ -7,7 +7,7 @@ from builder.models import User, Role
 
 @pytest.fixture()
 def admin_login(login, admin):
-    return login(username='Luke', password='12345678')
+    return login(email='mayforce@bewith.me', password='12345678')
 
 
 @pytest.mark.parametrize('view, kwargs, template', [
@@ -31,7 +31,7 @@ def test_set_unknown_id_in_user_details(endpoint, su_login, webtest):
 
 def test_toggle_use_with_success(su_login, user, webtest):
     response = webtest.get(url_for('users.toggle_user', user_id=user.id))
-    assert response.flashes == [('success', 'Usuário {} foi desativado.'.format(user.username))]
+    assert response.flashes == [('success', 'Usuário {} foi desativado.'.format(user.name))]
     user = User.query.get(user.id)
     assert user.active is False
 

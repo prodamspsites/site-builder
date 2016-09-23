@@ -12,9 +12,8 @@
             <thead class="thead-inverse">
                 <tr>
                     <th>#</th>
-                    <th>Usuário</th>
-                    <th>Email</th>
                     <th>Nome</th>
+                    <th>Email</th>
                     <th>Criado em</th>
                     <th>Ultima vez logado</th>
                     <th class="text-center">Ações</th>
@@ -25,9 +24,8 @@
                 <tr>
 
                     <th scope="row">{{ user.id }}</th>
-                    <td>{{ user.username }} </td>
-                    <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
                     <td>{{ user.created_at | strftime }}</td>
                     <td>{{ user.current_login_at | strftime }}</td>
                     <td class="text-center">

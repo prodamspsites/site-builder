@@ -67,17 +67,3 @@ class Role(Model):
         """Check length and if the username does not contains invalid chars"""
         if len(role_name) >= 3 and re.search(r'^[a-zA-Z0-9_.-]+$', role_name):
             return True
-
-    @property
-    def users(self):
-        """Return all users in this role"""
-        users = []
-        for role_user in self.role_users:
-            users.append(role_user.user)
-        return users
-
-    def remove_all_users(self):
-        """Remove all users in this role"""
-        for role_user in self.role_users:
-            role_user.delete(commit=True)
-        db.session.commit()

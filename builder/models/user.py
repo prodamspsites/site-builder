@@ -17,15 +17,24 @@ class User(Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     __tablename__ = 'user'
 
-    username = db.Column(db.String(30), unique=True, nullable=False)
+    # Required Informations
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
+    # Statuses
     active = db.Column(db.Boolean(), default=True)
+    confirmed = db.Column(db.Boolean(), default=False)
+
+    # Statistics
     created_at = db.Column(db.DateTime, index=True, default=datetime.now())
     last_login_at = db.Column(db.DateTime())
+    confirmed_at = db.Column(db.DateTime())
     current_login_at = db.Column(db.DateTime())
     login_count = db.Column(db.Integer(), default=0)
+
+    # Others info
+    temporary_token = db.Column(db.String(20))
 
     @property
     def superuser(self):
@@ -61,22 +70,16 @@ class User(Model, UserMixin):
         return available_roles
 
     @classmethod
-    def by_login(cls, login):
-        """Search user by username or email"""
-        if cls.verify_email(login):
-            user = cls.query.filter(User.email == login).first()
-        else:
-            user = cls.query.filter(User.username == login).first()
+    def by_email(cls, email):
+        """Search user by email"""
+        user = cls.query.filter(User.email == email).first()
         if not user:
             raise UserNotFound
         return user
 
     @classmethod
-    def create(cls, username, email, name, password, confirm_password):
+    def create(cls, email, name, password, confirm_password):
         """ Create a new user """
-        if not cls.verify_username(username):
-            raise InvalidUsername
-
         if not cls.verify_email(email):
             raise InvalidEmail
 
@@ -86,14 +89,13 @@ class User(Model, UserMixin):
         if password != confirm_password:
             raise PasswordMismatch
 
-        if not cls.validate_username_and_email(username, email):
+        if cls.validate_existent_email(email):
             raise UserAlreadyExist
 
         if not name:
             raise EmptyUserName
 
         user = User()
-        user.username = username
         user.email = email
         user.name = name
         user.password = cls.generate_password(password)
@@ -102,33 +104,19 @@ class User(Model, UserMixin):
         return user
 
     @classmethod
-    def validate_username_and_email(cls, username, email):
+    def validate_existent_email(cls, email):
         """Validate if username and email are available"""
-        email_user = cls.query.filter(User.username == username).first()
-        name_user = cls.query.filter(User.email == email).first()
-        if name_user or email_user:
-            return False
-        return True
-
-    def change_password(self, old_password, password, confirm_password):
-        """Change password of user"""
-        if not self.validate_password(old_password):
-            raise InvalidCredentials
-
-        if len(password) < 6:
-            raise InvalidPassword
-
-        if password != confirm_password:
-            raise PasswordMismatch
-
-        self.password = self.generate_password(password)
-        self.save()
-        db.session.commit()
-
-    def validate_password(self, password):
-        """Used for validate hash password"""
-        if check_password_hash(self.password, password):
+        user = cls.query.filter_by(email=email).first()
+        if user:
             return True
+        return False
+
+    @classmethod
+    def generate_password(cls, password=None):
+        """Create hash when password set or create a random password"""
+        if not password:
+            password = cls.random_password(12)
+        return generate_password_hash(password)
 
     @staticmethod
     def random_password(size=12):
@@ -141,32 +129,30 @@ class User(Model, UserMixin):
         if re.search(r'[\w.-]+@[\w.-]+.\w+', email):
             return True
 
-    @staticmethod
-    def verify_username(username):
-        """Check length and if the username does not contains invalid chars"""
-        if len(username) >= 3 and re.search(r'^[a-zA-Z0-9_.-]+$', username):
-            return True
+    def change_password(self, old_password, password, confirm_password):
+        """Change password of user"""
+        if len(password) < 6:
+            raise InvalidPassword
 
-    @classmethod
-    def generate_password(cls, password=None):
-        """Create hash when password set or create a random password"""
-        if not password:
-            password = cls.random_password(12)
-        return generate_password_hash(password)
+        if password != confirm_password:
+            raise PasswordMismatch
+
+        self.validate_password(old_password)
+        self.password = self.generate_password(password)
+        self.save()
+        db.session.commit()
+
+    def validate_password(self, password):
+        """Used for validate hash password"""
+        if check_password_hash(self.password, password):
+            return True
+        else:
+            raise InvalidCredentials
 
     def has_role(self, role):
         """Verify if this user have role"""
         if role in self.roles:
             return True
-
-    def delete_all_roles(self):
-        """Remove all roles of this user"""
-        if not self.user_roles:
-            raise UserNotHasRole
-
-        for user_role in self.user_roles:
-            user_role.delete(commit=True)
-        db.session.commit()
 
     def search_user_role(self, role_name):
         try:

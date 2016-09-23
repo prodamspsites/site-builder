@@ -5,7 +5,7 @@ from flask import url_for
 
 @pytest.fixture()
 def user_login(login, user):
-    return login(username='Chewbaca', password='12345678')
+    return login(email='chewe@solo.com', password='12345678')
 
 
 def test_login_user_with_success(user_login):
@@ -13,8 +13,8 @@ def test_login_user_with_success(user_login):
 
 
 def test_login_user_without_success(login, user):
-    response = login(username='Chewbaca', password='123456')
-    assert 'Usuário ou senha inválido' in response.body.decode()
+    response = login(email='chewe@solo.com', password='123456')
+    assert 'Email ou senha inválido' in response.body.decode()
 
 
 def test_logout(user_login, webtest):
@@ -38,7 +38,7 @@ def test_change_password_proccess_with_success(user_login, login, webtest):
     form['confirm'] = 'sw1234'
     form.submit().maybe_follow()
     webtest.get(url_for('security.logout')).maybe_follow()
-    response = login(username='Chewbaca', password='sw1234')
+    response = login(email='chewe@solo.com', password='sw1234')
     assert '<h3>Bem vindo Chewbaca da Silva!</h3>' in response.body.decode()
 
 
