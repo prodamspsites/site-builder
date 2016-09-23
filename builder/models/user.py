@@ -20,7 +20,7 @@ class User(Model, UserMixin):
     # Required Informations
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=True)
 
     # Statuses
     active = db.Column(db.Boolean(), default=True)
@@ -78,16 +78,10 @@ class User(Model, UserMixin):
         return user
 
     @classmethod
-    def create(cls, email, name, password, confirm_password):
+    def create(cls, email, name, password=None, confirm_password=None, invite=False):
         """ Create a new user """
         if not cls.verify_email(email):
             raise InvalidEmail
-
-        if len(password) < 6:
-            raise InvalidPassword
-
-        if password != confirm_password:
-            raise PasswordMismatch
 
         if cls.validate_existent_email(email):
             raise UserAlreadyExist
@@ -95,10 +89,22 @@ class User(Model, UserMixin):
         if not name:
             raise EmptyUserName
 
+        if not invite:
+            if len(password) < 6:
+                raise InvalidPassword
+
+            if password != confirm_password:
+                raise PasswordMismatch
+
         user = User()
         user.email = email
         user.name = name
-        user.password = cls.generate_password(password)
+
+        if invite:
+            user.temporary_token = cls.random_password(8)
+        else:
+            user.password = cls.generate_password(password)
+
         user.save()
         db.session.commit()
         return user

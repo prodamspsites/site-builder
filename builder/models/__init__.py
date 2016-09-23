@@ -76,3 +76,4 @@ class Model(db.Model, ModelMixin):
 
 from builder.models.user import User, UserRole # noqa
 from builder.models.role import Role # noqa
+from builder.models.invite import Invite # noqa

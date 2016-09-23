@@ -1,4 +1,4 @@
-"""Remove Username
+"""Refactor User Model
 This migration removes username and add more informations about confirmation.
 
 Revision ID: e14c75dd00a0
@@ -21,6 +21,7 @@ def upgrade():
     op.add_column('user', sa.Column('temporary_token', sa.String(length=20), nullable=True))
     op.drop_constraint('user_username_key', 'user', type_='unique')
     op.drop_column('user', 'username')
+    op.alter_column('user', 'password', existing_type=sa.VARCHAR(length=255), nullable=True)
 
 
 def downgrade():
@@ -29,3 +30,4 @@ def downgrade():
     op.drop_column('user', 'temporary_token')
     op.drop_column('user', 'confirmed_at')
     op.drop_column('user', 'confirmed')
+    op.alter_column('user', 'password', existing_type=sa.VARCHAR(length=255), nullable=False)
