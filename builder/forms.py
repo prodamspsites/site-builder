@@ -19,6 +19,19 @@ class UserForm(Form):
     superuser = BooleanField('Super Usuário')
 
 
+class InviteForm(Form):
+    """Form to invite new user"""
+    email = StringField('E-mail', description='Email')
+    name = StringField('Nome completo', description='Nome Completo')
+
+
+class AcceptForm(Form):
+    """Form to accept invite"""
+    token = StringField('Token', description='Token')
+    password = PasswordField('Senha', description='Nova senha')
+    confirm = PasswordField('Confirmação', description='Confirmação de senha')
+
+
 class RoleForm(Form):
     """Form to create and edit role"""
     name = StringField('Nome', description='Nome da permissão')
@@ -27,6 +40,7 @@ class RoleForm(Form):
 
 
 class ChangePasswordForm(Form):
+    """Form to change password"""
     old_password = PasswordField('Senha Antiga', description='Senha Antiga')
     password = PasswordField('Senha', description='Nova senha')
     confirm = PasswordField('Confirmação', description='Confirmação de senha')
