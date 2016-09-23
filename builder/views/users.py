@@ -45,7 +45,7 @@ def toggle_user(user_id):
         if user != current_user:
             action = 'desativado' if user.active else 'ativado'
             user.toggle_status()
-            flash('Usuário {} foi {}.'.format(user.username, action), category='success')
+            flash('Usuário {} foi {}.'.format(user.name, action), category='success')
         else:
             flash('Voce não pode alterar seus próprios usuário!', category='warning')
 
@@ -114,7 +114,7 @@ def set_role(user_id, role_id):
             flash('Permissão de superusuário só pode ser atribuída por outro superusuário', category='danger')
         else:
             user.set_role(role)
-            flash('Permissão {} atrelada ao usuário {}.'.format(role.name, user.username), category='success')
+            flash('Permissão {} atrelada ao usuário {}.'.format(role.name, user.name), category='success')
 
     except UserAlreadyInRole:
         flash('Usuário já tem essa permissão!', category='info')
@@ -141,7 +141,7 @@ def unset_role(user_id, role_id):
             flash('Permissão de superusuário só pode ser removida por outro superusuário', category='danger')
         else:
             user.remove_role(role)
-            flash('Permissão {} removida do usuário {}.'.format(role.name, user.username), category='success')
+            flash('Permissão {} removida do usuário {}.'.format(role.name, user.name), category='success')
 
     except UserNotHasRole:
         flash('Usuário já não tem essa permissão!', category='info')

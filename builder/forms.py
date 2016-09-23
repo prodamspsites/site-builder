@@ -5,13 +5,12 @@ from wtforms.fields import StringField, PasswordField, BooleanField
 
 class LoginForm(Form):
     """Form used for login user"""
-    username = StringField('Usuário', description='Nome de usuário')
+    email = StringField('Email', description='Email de usuário')
     password = PasswordField('Senha', description='Senha do usuário')
 
 
 class UserForm(Form):
     """Form to create and edit user"""
-    username = StringField('Usuário', description='Nome de usuário')
     email = StringField('E-mail', description='Email')
     name = StringField('Nome completo', description='Nome Completo')
     password = PasswordField('Senha', description='Senha')

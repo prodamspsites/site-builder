@@ -15,19 +15,17 @@ def login():
     """Used for login user through web"""
     form = LoginForm()
     if form.validate_on_submit():
-        username = form.username.data
+        email = form.email.data
         password = form.password.data
         try:
-            user = User.by_login(username)
-            if user.validate_password(password):
-                login_user(user)
-                user.reload_stats()
-                return redirect(url_for('security.dashboard'))
-            else:
-                raise PasswordMismatch
+            user = User.by_email(email)
+            user.validate_password(password)
+            login_user(user)
+            user.reload_stats()
+            return redirect(url_for('security.dashboard'))
 
-        except (UserNotFound, PasswordMismatch):
-            flash('Usuário ou senha inválido', category='danger')
+        except (UserNotFound, InvalidCredentials):
+            flash('Email ou senha inválido', category='danger')
             return redirect(url_for('security.login'))
 
     if current_user.is_authenticated:

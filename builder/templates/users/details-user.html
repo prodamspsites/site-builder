@@ -10,9 +10,9 @@
 <div class="col-md-5 col-md-offset-1">
 
         <div class="form-group input-group col-md-12">
-            <div class="col-md-4"><i class="glyphicon glyphicon-user"></i> Username:</div>
+            <div class="col-md-4"><i class="glyphicon glyphicon-user"></i> Nome:</div>
             <div class="col-md-8">
-                {{ user.username }}
+                {{ user.name }}
             </div>
         </div>
 
@@ -50,6 +50,18 @@
             <div class="col-md-4"><i class="glyphicon glyphicon-repeat"></i> Quantidade:</div>
             <div class="col-md-8">
                 {{ user.login_count }}
+            </div>
+        </div>
+
+        <div class="form-group input-group col-md-12">
+            <div class="col-md-4"><i class="glyphicon glyphicon-check"></i> Confirmado:</div>
+            <div class="col-md-8">
+                {% if user.confirmed %}
+                    <span class="glyphicon glyphicon-ok-sign" style="color: #092"></span>
+                    ({{ user.confirmed_at | strftime }})
+                {% else %}
+                    <span class="glyphicon glyphicon-remove-sign" style="color: #920"></span>
+                {% endif %}
             </div>
         </div>
 
