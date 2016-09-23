@@ -110,10 +110,10 @@ def webtest(app):
 
 @pytest.fixture()
 def login(webtest):
-    def helper(username, password):
+    def helper(email, password):
         login_view = webtest.get(url_for('security.login')).maybe_follow()
         form = login_view.form
-        form['username'] = username
+        form['email'] = email
         form['password'] = password
         return form.submit().maybe_follow()
     return helper
@@ -121,14 +121,13 @@ def login(webtest):
 
 @pytest.fixture()
 def su_login(login, superuser):
-    return login(username='Darth_Vader', password='12345678')
+    return login(email='mayforce@bewith.you', password='12345678')
 
 
 @pytest.fixture()
 def superuser(superuser_role):
     from builder.models import User
     user = User()
-    user.username = 'Darth_Vader'
     user.email = 'mayforce@bewith.you'
     user.name = 'Anakin Skywalker'
     user.password = user.generate_password(password='12345678')
@@ -141,7 +140,6 @@ def superuser(superuser_role):
 def admin(admin_role):
     from builder.models import User
     user = User()
-    user.username = 'Luke'
     user.email = 'mayforce@bewith.me'
     user.name = 'Luke Skywalker'
     user.password = user.generate_password(password='12345678')
@@ -154,7 +152,6 @@ def admin(admin_role):
 def user():
     from builder.models import User
     user = User()
-    user.username = 'Chewbaca'
     user.email = 'chewe@solo.com'
     user.name = 'Chewbaca da Silva'
     user.password = user.generate_password(password='12345678')

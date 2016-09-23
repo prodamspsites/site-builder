@@ -8,27 +8,24 @@ from builder.models import User
 
 
 def test_create_user_with_success():
-    User.create(username='testuser',
-                email='test1@gmail.com',
+    User.create(email='test1@gmail.com',
                 name='test',
                 password='12345678',
                 confirm_password='12345678')
-    user = User.query.filter_by(username='testuser').one()
-    assert user.email == 'test1@gmail.com'
+    user = User.query.filter_by(email='test1@gmail.com').one()
+    assert user.name == 'test'
 
 
-@pytest.mark.parametrize('exception, username, name, email, password, confirm_password', [
-    (UserAlreadyExist, 'Chewbaca', 'Chewbaca da Silva', 'chew@solo.com', '12345678', '12345678'),
-    (InvalidUsername, '', 'teste', 'test1@gmail.com', '12345678', '12345678'),
-    (InvalidUsername, 'test@user', 'teste', 'test1@gmail.com', '12345678', '12345678'),
-    (InvalidEmail, 'testuser', 'teste', 'itsnotvalidemail', '12345678', '12345678'),
-    (InvalidPassword, 'testuser', 'teste', 'test1@gmail.com', '', ''),
-    (PasswordMismatch, 'testuser', 'teste', 'test1@gmail.com', '12345678', '87654321'),
-    (EmptyUserName, 'testuser', '', 'test1@gmail.com', '12345678', '12345678')
+@pytest.mark.parametrize('exception, name, email, password, confirm_password', [
+    (UserAlreadyExist, 'Chewbaca da Silva', 'chewe@solo.com', '12345678', '12345678'),
+    (InvalidEmail, 'teste', 'itsnotvalidemail', '12345678', '12345678'),
+    (InvalidPassword, 'teste', 'test1@gmail.com', '', ''),
+    (PasswordMismatch, 'teste', 'test1@gmail.com', '12345678', '87654321'),
+    (EmptyUserName, '', 'test1@gmail.com', '12345678', '12345678')
 ])
-def test_create_user_raises_error(user, exception, username, name, email, password, confirm_password):
+def test_create_user_raises_error(user, exception, name, email, password, confirm_password):
     with pytest.raises(exception):
-        User.create(username=username, email=email, name=name, password=password, confirm_password=confirm_password)
+        User.create(email=email, name=name, password=password, confirm_password=confirm_password)
 
 
 def test_change_user_password_with_success(user):
@@ -47,27 +44,22 @@ def test_change_password_errors(user, exception, old_password, password, confirm
         user.change_password(old_password=old_password, password=password, confirm_password=confirm_password)
 
 
-def test_get_user_with_username(user):
-    user = User.by_login('Chewbaca')
-    assert user.email == 'chewe@solo.com'
-
-
 def test_get_user_with_email(user):
-    user = User.by_login('chewe@solo.com')
+    user = User.by_email('chewe@solo.com')
     assert str(user) == '<User[1] name=\'Chewbaca da Silva\'>'
 
 
 def test_get_inexistent_user():
     with pytest.raises(UserNotFound):
-        User.by_login('Luke_Skywalker')
+        User.by_email('luke@skywalker.com')
 
 
 def test_return_true_in_valid_password(user):
     assert user.validate_password('12345678') is True
 
 
-def test_return_none_in_invalid_password(user):
-    assert user.validate_password('None') is None
+# def test_return_none_in_invalid_password(user):
+#     assert user.validate_password('None') is None
 
 
 def test_invalidate_and_validate_user(user):
@@ -97,10 +89,8 @@ def test_should_raise_error_in_remove_wrong_role(superuser, admin_role):
         superuser.remove_role(admin_role)
 
 
-def test_remove_all_roles_for_a_user(user, admin_role, client_role):
-    user.set_role(admin_role)
-    user.set_role(client_role)
-    assert len(user.roles) == 2
-    user.delete_all_roles()
-    user.refresh()
-    assert len(user.roles) == 0
+def test_available_roles(superuser, admin_role, client_role):
+    assert superuser.roles_available == [admin_role, client_role]
+    superuser.set_role(client_role)
+    assert superuser.client == True
+    assert superuser.roles_available == [admin_role]
