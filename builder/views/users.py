@@ -2,8 +2,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
-from builder.models import User, Role
-from builder.forms import UserForm, RoleForm
+from builder.models import User, Role, Invite
+from builder.forms import RoleForm, InviteForm
 from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist,
                                 RoleAlreadyExist, InvalidRoleName, EmptyUserName, UserNotHasRole, UserAlreadyInRole)
 from builder.views import login_permission
@@ -149,3 +149,26 @@ def unset_role(user_id, role_id):
         flash('Erro ao remover permissão!', category='danger')
 
     return redirect(request.referrer)
+
+
+@blueprint.route('/invites', methods=['GET', 'POST'])
+@login_required
+@login_permission('admin')
+def invites():
+    form = InviteForm()
+    if form.validate_on_submit():
+        try:
+            invite = Invite.create_invite(host=current_user, guest_name=form.name.data, guest_email=form.email.data)
+            flash('O usuário {} foi convidado!'.format(invite.guest.name), category='success')
+
+        except UserAlreadyExist:
+            flash('O email {} já foi utilizado!'.format(form.email.data), category='warning')
+
+        except EmptyUserName:
+            flash('O campo nome está vazio!'.format(form.email.data), category='danger')
+
+        except InvalidEmail:
+            flash('O email é inválido!'.format(form.email.data), category='danger')
+
+    invites = Invite.query.filter(Invite.host_id == current_user.id).all()
+    return render_template('users/invites.html', form=form, invites=invites)
