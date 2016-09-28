@@ -2,7 +2,7 @@
 import pytest
 from flask import url_for
 
-from builder.models import User, Role
+from builder.models import User, Role, Invite
 
 
 @pytest.fixture()
@@ -136,3 +136,28 @@ def test_set_inexistent_permission(su_login, admin, webtest):
 def test_unset_inexistent_permission(su_login, admin, webtest):
     response = webtest.get(url_for('users.unset_role', user_id=admin.id, role_id=999))
     assert response.flashes == [('danger', 'Erro ao remover permissão!')]
+
+
+def test_invite_user_with_success(su_login, webtest):
+    response = webtest.get(url_for('users.invites'))
+    form = response.form
+    form['name'] = 'User de Teste'
+    form['email'] = 'teste@invite.com'
+    form.submit().maybe_follow()
+    invite = Invite.get_invite('teste@invite.com')
+    assert invite.guest.name == 'User de Teste'
+
+
+@pytest.mark.parametrize('name, email, message', [
+    ('Darth Vader', '', [('danger', 'O email é inválido!')]),
+    ('', 'darth_vader@sw.com', [('danger', 'O campo nome está vazio!')]),
+    ('Darth Vader', 'mayforce@bewith.you', [('warning', 'O email mayforce@bewith.you já foi utilizado!')])
+])
+def test_invite_user_without_sucess(name, email, message, su_login, webtest):
+    response = webtest.get(url_for('users.invites'))
+    form = response.form
+    form['name'] = name
+    form['email'] = email
+    response = form.submit()
+    assert response.flashes == message
+    assert Invite.query.count() == 0

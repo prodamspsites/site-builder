@@ -1,0 +1,64 @@
+{% extends "common/_layout-full.html" %}
+
+{% block title %}Lista de convidados{% endblock %}
+
+{% block content %}
+
+    <div class="row well">
+        <form action="{{ url_for('users.invites') }}" id="inviteForm" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="col-md-5">
+              <div class="form-inline col-md-12">
+                <label>{{ form.name.description }}</label>
+                {{ form.name(class='form-control', type='text') }}
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-inline col-md-12">
+                <label>{{ form.email.description }}</label>
+                {{ form.email(class='form-control', type='email') }}
+              </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus"></span> Convidar Usuário
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Criado em</th>
+                    <th>Aceito em</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invite in invites %}
+                <tr>
+                    <th scope="row">{{ invite.id }}</th>
+                    <td>{{ invite.guest.name }}</td>
+                    <td>{{ invite.guest.email }}</td>
+                    <td>{{ invite.created_at | strftime  }}</td>
+                    <td>{{ invite.accepted_at | strftime }}</td>
+                    <td>{{ invite.current_status }}</td>
+                    <td>
+                        <a class="btn btn-xs btn-warning" href="#">
+                            <span class="glyphicon glyphicon-ok-sign"></span> Reenviar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

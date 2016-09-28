@@ -1,5 +1,6 @@
 #coding: utf-8
 import os
+from datetime import datetime
 
 
 class BaseConfig(object):
@@ -22,3 +23,5 @@ class BaseConfig(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+
+    INVITE_EXPIRE = 7

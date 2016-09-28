@@ -20,7 +20,7 @@ class User(Model, UserMixin):
     # Required Informations
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=True)
 
     # Statuses
     active = db.Column(db.Boolean(), default=True)
@@ -78,16 +78,10 @@ class User(Model, UserMixin):
         return user
 
     @classmethod
-    def create(cls, email, name, password, confirm_password):
+    def create(cls, email, name, password=None, confirm_password=None, invite=False):
         """ Create a new user """
         if not cls.verify_email(email):
             raise InvalidEmail
-
-        if len(password) < 6:
-            raise InvalidPassword
-
-        if password != confirm_password:
-            raise PasswordMismatch
 
         if cls.validate_existent_email(email):
             raise UserAlreadyExist
@@ -95,10 +89,22 @@ class User(Model, UserMixin):
         if not name:
             raise EmptyUserName
 
+        if not invite:
+            if len(password) < 6:
+                raise InvalidPassword
+
+            if password != confirm_password:
+                raise PasswordMismatch
+
         user = User()
         user.email = email
         user.name = name
-        user.password = cls.generate_password(password)
+
+        if invite:
+            user.temporary_token = cls.random_password()
+        else:
+            user.password = generate_password_hash(password)
+
         user.save()
         db.session.commit()
         return user
@@ -111,15 +117,8 @@ class User(Model, UserMixin):
             return True
         return False
 
-    @classmethod
-    def generate_password(cls, password=None):
-        """Create hash when password set or create a random password"""
-        if not password:
-            password = cls.random_password(12)
-        return generate_password_hash(password)
-
     @staticmethod
-    def random_password(size=12):
+    def random_password(size=8):
         """Create a string for password"""
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(size))
 
@@ -138,7 +137,7 @@ class User(Model, UserMixin):
             raise PasswordMismatch
 
         self.validate_password(old_password)
-        self.password = self.generate_password(password)
+        self.password = generate_password_hash(password)
         self.save()
         db.session.commit()
 
