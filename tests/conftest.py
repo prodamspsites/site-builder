@@ -5,6 +5,7 @@ os.environ['BUILDER_ENV'] = 'test'
 
 import pytest
 from flask import url_for
+from werkzeug import generate_password_hash
 from flask.testing import FlaskClient
 from flask_webtest import TestApp
 from builder.main import db
@@ -130,7 +131,7 @@ def superuser(superuser_role):
     user = User()
     user.email = 'mayforce@bewith.you'
     user.name = 'Anakin Skywalker'
-    user.password = user.generate_password(password='12345678')
+    user.password = generate_password_hash('12345678')
     user.set_role(superuser_role)
     user.save(commit=True)
     return user
@@ -142,7 +143,7 @@ def admin(admin_role):
     user = User()
     user.email = 'mayforce@bewith.me'
     user.name = 'Luke Skywalker'
-    user.password = user.generate_password(password='12345678')
+    user.password = generate_password_hash('12345678')
     user.set_role(admin_role)
     user.save(commit=True)
     return user
@@ -154,7 +155,7 @@ def user():
     user = User()
     user.email = 'chewe@solo.com'
     user.name = 'Chewbaca da Silva'
-    user.password = user.generate_password(password='12345678')
+    user.password = generate_password_hash('12345678')
     user.save(commit=True)
     return user
 
@@ -187,3 +188,20 @@ def client_role():
     role.description = 'Cliente'
     role.save(commit=True)
     return role
+
+
+@pytest.fixture()
+def invite(superuser):
+    from builder.models import Invite
+    guest = {'guest_name': 'test', 'guest_email': 'test@invite.com'}
+    invite = Invite.create_invite(host=superuser, **guest)
+    return invite
+
+
+@pytest.fixture()
+def expired_invite(invite):
+    from datetime import datetime, timedelta
+    invite.created_at = datetime.now() - timedelta(days=1)
+    invite.expire_at = datetime.now() - timedelta(days=15)
+    invite.save(commit=True)
+    return invite
