@@ -75,3 +75,7 @@ class UserRoleNotFound(BaseException):
 
 class InviteNotFound(BaseException):
     pass
+
+
+class InvalidToken(BaseException):
+    pass

@@ -7,7 +7,7 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from builder.exceptions import (InvalidPassword, InvalidUsername, InvalidEmail, PasswordMismatch, UserAlreadyExist,
+from builder.exceptions import (InvalidPassword, InvalidToken, InvalidEmail, PasswordMismatch, UserAlreadyExist,
                                 UserNotFound, UserNotHasRole, InvalidCredentials, UserAlreadyInRole, EmptyUserName)
 from builder.models import Model, db
 from builder.models.role import Role
@@ -137,6 +137,24 @@ class User(Model, UserMixin):
             raise PasswordMismatch
 
         self.validate_password(old_password)
+        self.password = generate_password_hash(password)
+        self.save()
+        db.session.commit()
+
+    def create_password(self, temporary_token, password, confirm_password):
+        """Change password of user"""
+        if len(password) < 6:
+            raise InvalidPassword
+
+        if password != confirm_password:
+            raise PasswordMismatch
+
+        if temporary_token != self.temporary_token:
+            raise InvalidToken
+
+        self.temporary_token = ''
+        self.confirmed = True
+        self.confirmed_at = datetime.now()
         self.password = generate_password_hash(password)
         self.save()
         db.session.commit()

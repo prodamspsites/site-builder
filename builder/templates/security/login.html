@@ -3,8 +3,9 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+<div class="Absolute-Center Login-Form">
     <div id="logo-container"></div>
-      <div class="col-sm-12 col-md-10 col-md-offset-1">
+      <div class="col-sm-12">
         <form action="{{ form_action }}" id="loginForm" method="POST">
           {{ form.hidden_tag() }}
 
@@ -19,8 +20,10 @@
             {{ form.password(placeholder='Senha', class='form-control', type='password') }}
           </div>
 
-          <div class="form-group">
-            <input type="submit" class="btn btn-default btn-block" value="Entrar" />
+          <div class="col-sm-10 col-sm-offset-1">
+            <div class="form-group">
+              <input type="submit" class="btn btn-success btn-block" value="Entrar" />
+            </div>
           </div>
 
           <div class="form-group text-center">
@@ -30,4 +33,5 @@
         </form>
       </div>
     </div>
+</div>
 {% endblock %}

@@ -1,7 +1,8 @@
 # coding: utf-8
+from base64 import b64encode
 from datetime import datetime, timedelta
-from flask import current_app
-from builder.exceptions import UserNotFound, InviteNotFound
+from flask import current_app, request, url_for
+from builder.exceptions import InvalidToken, InviteNotFound
 from builder.models import Model, db, User
 
 
@@ -27,6 +28,14 @@ class Invite(Model):
     @property
     def guest(self):
         return User.query.get(self.guest_id)
+
+    @property
+    def activation_url(self):
+        encoded_bytes = '{}:{}'.format(self.guest.email, self.guest.temporary_token).encode()
+        base64_string = b64encode(encoded_bytes).decode()
+        url_prefix = request.host
+        url_suffix = url_for('security.confirm_invite')
+        return 'http://{}{}?t={}'.format(url_prefix, url_suffix, base64_string)
 
     @staticmethod
     def create_invite(host, guest_name, guest_email):
@@ -67,12 +76,17 @@ class Invite(Model):
             self.save(commit=True)
             return True
 
-    def accept(self):
+    def accept(self, temporary_token, password, confirm_password):
         if self.is_valid():
+            self.guest.create_password(temporary_token=temporary_token,
+                                       password=password,
+                                       confirm_password=confirm_password)
             self.accepted_at = datetime.now()
             self.current_status = 'aceito'
             self.save(commit=True)
             return True
+        else:
+            raise InvalidToken
 
     def send(self):
         if not self.is_valid():

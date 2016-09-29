@@ -27,6 +27,7 @@ class InviteForm(Form):
 
 class AcceptForm(Form):
     """Form to accept invite"""
+    email = StringField('Email', description='Email')
     token = StringField('Token', description='Token')
     password = PasswordField('Senha', description='Nova senha')
     confirm = PasswordField('Confirmação', description='Confirmação de senha')
