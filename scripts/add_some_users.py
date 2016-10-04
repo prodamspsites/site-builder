@@ -15,26 +15,22 @@ if __name__ == '__main__':
         from builder.models import User, Role
 
         print('Add users for system...')
-        super_user = User.create(username='superuser',
-                                 email='superuser@prodam.sp.gov.br',
+        super_user = User.create(email='superuser@prodam.sp.gov.br',
                                  name='Prodam Superusuário',
                                  password='prodam123',
                                  confirm_password='prodam123')
 
-        admin_user = User.create(username='admin',
-                                 email='admin@prodam.sp.gov.br',
+        admin_user = User.create(email='admin@prodam.sp.gov.br',
                                  name='Prodam Administrador',
                                  password='prodam123',
                                  confirm_password='prodam123')
 
-        client_user = User.create(username='client',
-                                  email='client@prodam.sp.gov.br',
+        client_user = User.create(email='client@prodam.sp.gov.br',
                                   name='Prodam Cliente',
                                   password='prodam123',
                                   confirm_password='prodam123')
 
-        common_user = User.create(username='prodam',
-                                  email='prodam@prodam.sp.gov.br',
+        common_user = User.create(email='prodam@prodam.sp.gov.br',
                                   name='Prodam Usuário Comum',
                                   password='prodam123',
                                   confirm_password='prodam123')

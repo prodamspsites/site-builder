@@ -18,7 +18,8 @@ class Invite(Model):
     expire_at = db.Column(db.DateTime, index=True)
     viewed_at = db.Column(db.DateTime, index=True)
     accepted_at = db.Column(db.DateTime, index=True)
-    current_status = db.Column(db.String(20), default='criado')
+    current_status = db.Column(db.Enum('criado', 'aceito', 'inválido', 'visualizado', 'enviado', 'reenviado'),
+                               default='criado')
     sent_count = db.Column(db.Integer(), default=0)
 
     @property
