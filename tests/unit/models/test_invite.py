@@ -1,10 +1,8 @@
 # coding: utf-8
-import mock
 import pytest
-from datetime import datetime, timedelta
 
 from builder.models import Invite
-from builder.exceptions import UserNotFound, InviteNotFound
+from builder.exceptions import UserNotFound, InviteNotFound, InvalidToken
 
 
 def test_invite_user_with_success_and_get_invite(superuser):
@@ -28,9 +26,15 @@ def test_validate_invite(invite):
 
 
 def test_accept_invite_should_update_status_and_invalidate(invite):
-    invite.accept()
+    invite.accept(temporary_token=invite.guest.temporary_token, password='123456', confirm_password='123456')
     assert invite.current_status == 'aceito'
     assert invite.is_valid() == False
+
+
+def test_accept_should_raise_invalid_token(invite):
+    invite.accept(temporary_token=invite.guest.temporary_token, password='123456', confirm_password='123456')
+    with pytest.raises(InvalidToken):
+        invite.accept(temporary_token='12345', password='123456', confirm_password='123456')
 
 
 def test_view_invite_should_update_status(invite):

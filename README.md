@@ -72,12 +72,12 @@ A ferramenta de teste utilizada aqui é o **Pytest** com as seguintes definiçõ
 
 ### Rodando os testes
 
-- Use o comando `PYTHONPATH=. py.test tests`
+- Use o comando `PYTHONPATH=. py.test tests/unit`
 
 
 ### Coverage
 
-- Use o comando `PYTHONPATH=. py.test tests --cov-report=html --cov=builder`
+- Use o comando `PYTHONPATH=. py.test tests/unit --cov-report=html --cov=builder`
 - O coverage poderá ser visto no caminho `htmlconv/index.html`
 
 

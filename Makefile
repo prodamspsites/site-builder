@@ -6,10 +6,10 @@ clean:
 	@find . -name '__pycache__' -prune | xargs rm -rf # clean __pycache__ dirs build by py.test
 
 coverage:
-	PYTHONPATH=. py.test tests --cov-report=html --cov=builder ${ARGS}
+	PYTHONPATH=. py.test tests/unit --cov-report=html --cov=builder ${ARGS}
 
 unit:
-	PYTHONPATH=. py.test ${ARGS} tests
+	PYTHONPATH=. py.test ${ARGS} tests/unit
 
 local_config:
 	cp builder/config/local.py.example builder/config/local.py

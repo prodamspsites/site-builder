@@ -4,8 +4,8 @@ from flask_login import login_required, current_user
 
 from builder.models import User, Role, Invite
 from builder.forms import RoleForm, InviteForm
-from builder.exceptions import (InvalidUsername, InvalidEmail, InvalidPassword, PasswordMismatch, UserAlreadyExist,
-                                RoleAlreadyExist, InvalidRoleName, EmptyUserName, UserNotHasRole, UserAlreadyInRole)
+from builder.exceptions import (InvalidEmail, UserAlreadyExist, RoleAlreadyExist, InvalidRoleName, EmptyUserName,
+                                UserNotHasRole, UserAlreadyInRole)
 from builder.views import login_permission
 
 
@@ -170,5 +170,5 @@ def invites():
         except InvalidEmail:
             flash('O email é inválido!'.format(form.email.data), category='danger')
 
-    invites = Invite.query.filter(Invite.host_id == current_user.id).all()
+    invites = Invite.query.all()
     return render_template('users/invites.html', form=form, invites=invites)

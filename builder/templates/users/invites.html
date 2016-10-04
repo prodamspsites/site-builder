@@ -48,13 +48,16 @@
                     <th scope="row">{{ invite.id }}</th>
                     <td>{{ invite.guest.name }}</td>
                     <td>{{ invite.guest.email }}</td>
-                    <td>{{ invite.created_at | strftime  }}</td>
+                    <td>{{ invite.created_at | strftime }}</td>
                     <td>{{ invite.accepted_at | strftime }}</td>
                     <td>{{ invite.current_status }}</td>
-                    <td>
-                        <a class="btn btn-xs btn-warning" href="#">
-                            <span class="glyphicon glyphicon-ok-sign"></span> Reenviar
-                        </a>
+                    <td class="text-center">
+                        {% if invite.current_status not in ['aceito'] %}
+                            <a class="btn btn-xs btn-default" href="#">Reenviar</a>
+                        {% endif %}
+                        {% if invite.current_status not in ['aceito', 'invalido'] and current_user.superuser %}
+                            <a class="btn btn-xs btn-primary" href="{{ invite.activation_url }}">Acessar</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

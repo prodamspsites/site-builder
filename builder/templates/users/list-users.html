@@ -12,6 +12,9 @@
                     <th>Email</th>
                     <th>Criado em</th>
                     <th>Ultima vez logado</th>
+                    {% if current_user.superuser %}
+                        <th>Token Temporário</th>
+                    {% endif %}
                     <th class="text-center">Ações</th>
                 </tr>
             </thead>
@@ -24,6 +27,9 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.created_at | strftime }}</td>
                     <td>{{ user.current_login_at | strftime }}</td>
+                    {% if current_user.superuser %}
+                        <td>{{ user.temporary_token }}</td>
+                    {% endif %}
                     <td class="text-center">
                         <a class="btn btn-xs btn-info" href="{{ url_for('users.user_details', user_id=user.id) }}">
                             <span class="glyphicon glyphicon-zoom-in"></span> Detalhes

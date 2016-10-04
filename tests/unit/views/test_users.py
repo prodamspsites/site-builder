@@ -161,3 +161,38 @@ def test_invite_user_without_sucess(name, email, message, su_login, webtest):
     response = form.submit()
     assert response.flashes == message
     assert Invite.query.count() == 0
+
+
+def test_accept_invite_with_success(invite, webtest):
+    response = webtest.get(invite.activation_url)
+    form = response.form
+    form['password'] = '123456'
+    form['confirm'] = '123456'
+    form.submit()
+    assert invite.current_status == 'aceito'
+
+
+@pytest.mark.parametrize('password, confirm_password, message', [
+    ('123', '123', [('danger', 'A senha tem de ter no mínimo 6 caracteres!')]),
+    ('123456', '654321', [('danger', 'Os campos senha e confirmação não estão iguais!')])
+])
+def test_confirm_invite_without_success(password, confirm_password, message, invite, webtest):
+    response = webtest.get(url_for('security.confirm_invite'))
+    form = response.form
+    form['email'] = invite.guest.email
+    form['token'] = invite.guest.temporary_token
+    form['password'] = password
+    form['confirm'] = confirm_password
+    response = form.submit()
+    assert response.flashes == message
+
+
+def test_confirm_invite_without_valid_token(invite, webtest):
+    response = webtest.get(url_for('security.confirm_invite'))
+    form = response.form
+    form['email'] = invite.guest.email
+    form['token'] = '123456'
+    form['password'] = '123456'
+    form['confirm'] = '123456'
+    response = form.submit()
+    assert response.flashes == [('danger', 'O token não é valido!')]
