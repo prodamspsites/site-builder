@@ -1,0 +1,15 @@
+# File location: /etc/systemd/system/builder.service
+
+[Unit]
+Description=uWSGI instance to serve builder project
+After=network.target
+
+[Service]
+User=root
+Group=nginx
+WorkingDirectory=/root/projetos/site-builder
+Environment="PATH=/root/.pyenv/versions/builder/bin"
+ExecStart=/root/.pyenv/versions/builder/bin/uwsgi --ini=/root/projetos/site-builder/builder.ini
+
+[Install]
+WantedBy=multi-user.target
