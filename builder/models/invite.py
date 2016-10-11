@@ -3,7 +3,7 @@ from base64 import b64encode
 from datetime import datetime, timedelta
 from flask import current_app, request, url_for
 from builder.exceptions import InvalidToken, InviteNotFound
-from builder.models import Model, db, User
+from builder.models import Model, db, User, utils
 
 
 class Invite(Model):
@@ -18,8 +18,7 @@ class Invite(Model):
     expire_at = db.Column(db.DateTime, index=True)
     viewed_at = db.Column(db.DateTime, index=True)
     accepted_at = db.Column(db.DateTime, index=True)
-    current_status = db.Column(db.Enum('criado', 'aceito', 'inválido', 'visualizado', 'enviado', 'reenviado'),
-                               default='criado')
+    current_status = db.Column(db.Enum(*utils.INVITE_STATUS_LIST), default='criado')
     sent_count = db.Column(db.Integer(), default=0)
 
     @property
