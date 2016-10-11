@@ -1,8 +1,8 @@
 # coding: utf-8
-from builder.config.base import BaseConfig
+from builder.config.base import Config
 
 
-class Config(BaseConfig):
+class Config(Config):
     """ Specific config used in test environment """
     SQLALCHEMY_DATABASE_URI = 'sqlite:///'
     SECRET_KEY = 'test'

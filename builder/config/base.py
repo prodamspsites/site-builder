@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 
-class BaseConfig(object):
+class Config(object):
     """ Basic config shared in all environments """
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
