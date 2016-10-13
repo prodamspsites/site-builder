@@ -1,4 +1,5 @@
 # File location: /etc/systemd/system/builder.service
+# EnvironmentFile contains variable keys used in this process
 
 [Unit]
 Description=uWSGI instance to serve builder project
@@ -8,7 +9,7 @@ After=network.target
 User=root
 Group=nginx
 WorkingDirectory=/root/projetos/site-builder
-Environment="PATH=/root/.pyenv/versions/builder/bin"
+EnvironmentFile=/root/projetos/exports
 ExecStart=/root/.pyenv/versions/builder/bin/uwsgi --ini=/root/projetos/site-builder/builder.ini
 
 [Install]
