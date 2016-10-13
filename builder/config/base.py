@@ -23,5 +23,7 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') or False
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL') or False
 
     INVITE_EXPIRE = 7
